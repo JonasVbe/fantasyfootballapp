@@ -1,0 +1,17 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>{{ wedstrijd.thuisploeg }} vs {{ wedstrijd.uitploeg }}</ion-card-title>
+    <ion-card-subtitle>{{ wedstrijd.datum }}</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <div *ngIf="wedstrijd.finished; else upcomingMatch">
+      <ion-label>Eindstand:</ion-label>
+      <ion-chip color="primary">{{ wedstrijd.thuisscore }}</ion-chip> -
+      <ion-chip color="secondary">{{ wedstrijd.uitScore }}</ion-chip>
+    </div>
+    <ng-template #upcomingMatch>
+      <ion-label>Wedstrijd begint om {{ wedstrijd.uur }}</ion-label>
+    </ng-template>
+  </ion-card-content>
+</ion-card>

@@ -1,0 +1,21 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Speeldag 15</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Speeldag 15</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+    <div *ngFor="let wedstrijd of wedstrijden">
+      <app-wedstrijd [wedstrijd]="wedstrijd"></app-wedstrijd>
+    </div>
+
+
+
+</ion-content>
