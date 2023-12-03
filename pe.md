@@ -9,7 +9,7 @@
 **Een ploeg bestaat uit 15 spelers, waarvan 11 actieve spelers en 4 wisselspelers(de bank).** 
 **Van deze 15 spelers zijn er 2 keepers, 5 verdedigers, 5 middenvelders en 3 aanvallers.**
 
-**Er moeten per positie steeds minstens: 1 keeper, 3 verdedigers, 3 middenvelders en 1 aanvaller**
+**Er moeten per positie steeds minstens: 1 keeper, 3 verdedigers, 2 middenvelders en 1 aanvaller**
 **En maximum 1 keeper, 5 verdedigers, 5 middenvelders en 3 aanvallers op het veld staan.**
 
 **Per speeldag krijgt elke speler punten op basis van zijn prestaties in de wedstrijd. Als een speler niet speelt en nul punten heeft, wordt hij (automatisch) gewisseld met een speler op de bank de wel gespeeld heeft.**

@@ -185,6 +185,31 @@ export class SpelersService {
     return this.spelers.filter(speler => speler.positie !== 'Doelman' && !speler.isActief)
   }
 
+  /*get beschikbareSpelersOmTeWisselen(gewisseldeSpeler: ISpeler): ISpeler[] {
+    let output: ISpeler[] = []
+    if(!gewisseldeSpeler) {
+      console.log('geen speler geselecteerd om te wisselen.')
+      return []
+    }
+
+    if(gewisseldeSpeler.positie === 'Doelman') {
+      const wisselDoelman = gewisseldeSpeler.isActief ? this.reserveDoelman : this.actieveDoelman
+      output.push(wisselDoelman!)
+    }
+    else{
+      if(gewisseldeSpeler.isActief){
+        output.concat(this.reserveSpelers)
+      }
+      else{
+
+      }
+
+    }
+
+    return output
+  }*/
+
+
   openWisselMenu(speler: ISpeler) {
     console.log('openWisselMenu', speler)
   }

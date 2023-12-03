@@ -3,6 +3,7 @@ import {SpelersService} from '../../services/spelers.service'
 import {ISpeler} from '../../../models/ISpeler'
 
 
+
 @Component({
   selector: 'app-speler',
   templateUrl: './speler.component.html',
@@ -14,6 +15,8 @@ export class SpelerComponent  implements OnInit {
   spelersService = inject(SpelersService)
 
   constructor() { }
+
+
 
   ngOnInit() {
 
