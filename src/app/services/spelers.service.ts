@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import {ISpeler} from '../../models/ISpeler'
 
 
@@ -8,8 +8,8 @@ import {ISpeler} from '../../models/ISpeler'
 export class SpelersService {
 
   spelers: ISpeler[] = []
-  geselecteerdeSpelerVoorWissel: ISpeler | null = null;
-  beschikbareWisselspelers: ISpeler[] = [];
+  geselecteerdeSpelerVoorWissel: ISpeler | null = null
+  beschikbareWisselspelers: ISpeler[] = []
 
   constructor() {
     this.spelers = [
@@ -188,16 +188,16 @@ export class SpelersService {
     return this.spelers.filter(speler => speler.positie !== 'Doelman' && !speler.isActief)
   }
   selecteerSpelerVoorWissel(speler: ISpeler) {
-    this.geselecteerdeSpelerVoorWissel = speler;
-    this.beschikbareWisselspelers = this.getBeschikbareSpelersOmTeWisselen(speler);
+    this.geselecteerdeSpelerVoorWissel = speler
+    this.beschikbareWisselspelers = this.getBeschikbareSpelersOmTeWisselen(speler)
 
   }
 
   isSpelerBeschikbaarVoorWissel(speler: ISpeler): boolean {
-    return this.beschikbareWisselspelers.includes(speler);
+    return this.beschikbareWisselspelers.includes(speler)
   }
   getBeschikbareSpelersOmTeWisselen(gewisseldeSpeler: ISpeler): ISpeler[] {
-    let output: ISpeler[] = []
+
     if(!gewisseldeSpeler) {
       console.log('geen speler geselecteerd om te wisselen.')
       return []
@@ -205,27 +205,47 @@ export class SpelersService {
 
     if(gewisseldeSpeler.positie === 'Doelman') {
       const wisselDoelman = gewisseldeSpeler.isActief ? this.reserveDoelman : this.actieveDoelman
-      output.push(wisselDoelman!)
+      return [wisselDoelman!]
     }
-    else{
-      if(gewisseldeSpeler.isActief){
-       output = output.concat(this.reserveSpelers)
-      }
-      else{
-
-        output = output.concat(this.actieveVerdedigers, this.actieveMiddenvelders, this.actieveAanvallers)
-
-      }
-
+    if (gewisseldeSpeler.isActief) {
+      return this.bepaalWisseloptiesVoorActieveVeldspeler(gewisseldeSpeler)
     }
 
-    return output
+    // Wisselen van reserve veldspelers
+    return this.bepaalWisseloptiesVoorReserveVeldspeler(gewisseldeSpeler)
   }
 
-  async openWisselMenu(speler: ISpeler) {
-    const beschikbareWisselspelers = this.getBeschikbareSpelersOmTeWisselen(speler)
+  private bepaalWisseloptiesVoorActieveVeldspeler(speler: ISpeler): ISpeler[] {
+    const minAantalVerdedigers = 3
+    const minAantalAanvallers = 1
 
+    if (speler.positie === 'Verdediger' && this.actieveVerdedigers.length <= minAantalVerdedigers) {
+      return this.reserveSpelers.filter(reserveSpeler => reserveSpeler.positie === 'Verdediger')
+    }
+
+    if (speler.positie === 'Aanvaller' && this.actieveAanvallers.length <= minAantalAanvallers) {
+      return this.reserveSpelers.filter(reserveSpeler => reserveSpeler.positie === 'Aanvaller')
+    }
+
+    return this.reserveSpelers
   }
+
+  private bepaalWisseloptiesVoorReserveVeldspeler(speler: ISpeler): ISpeler[] {
+    let wisselopties: ISpeler[] = []
+    wisselopties = wisselopties.concat(this.actieveVerdedigers, this.actieveMiddenvelders, this.actieveAanvallers)
+
+    if (speler.positie !== 'Verdediger') {
+      wisselopties = wisselopties.filter(actieveSpeler => actieveSpeler.positie !== 'Verdediger' || this.actieveVerdedigers.length > 3)
+    }
+
+    if (speler.positie !== 'Aanvaller') {
+      wisselopties = wisselopties.filter(actieveSpeler => actieveSpeler.positie !== 'Aanvaller' || this.actieveAanvallers.length > 1)
+    }
+
+    return wisselopties
+  }
+
+
 
 
   wisselSpeler(spelerUit:ISpeler, spelerIn: ISpeler){
@@ -251,16 +271,16 @@ export class SpelersService {
     }
 
     this.spelers.forEach(speler => speler.isKapitein = false)
-    const spelerOmKapiteinTeMaken = this.spelers.find(speler => speler.id === geselecteerdeSpeler.id);
+    const spelerOmKapiteinTeMaken = this.spelers.find(speler => speler.id === geselecteerdeSpeler.id)
     if (spelerOmKapiteinTeMaken) {
-      spelerOmKapiteinTeMaken.isKapitein = true;
+      spelerOmKapiteinTeMaken.isKapitein = true
     }
   }
 
   setLogo(){
     this.spelers.forEach(speler => {
       if (!speler.logo) {
-        speler.logo = this.getLogoNaam(speler.ploeg);
+        speler.logo = this.getLogoNaam(speler.ploeg)
       }
 
     })
