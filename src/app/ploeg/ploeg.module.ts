@@ -8,7 +8,7 @@ import { PloegPageRoutingModule } from './ploeg-routing.module';
 
 import { PloegPage } from './ploeg.page';
 import {SharedModule} from '../shared/shared.module'
-import {SpelerComponent} from '../shared/speler/speler.component'
+
 
 @NgModule({
   imports: [
@@ -18,6 +18,6 @@ import {SpelerComponent} from '../shared/speler/speler.component'
     PloegPageRoutingModule,
     SharedModule
   ],
-  declarations: [PloegPage, SpelerComponent]
+  declarations: [PloegPage]
 })
 export class PloegPageModule {}

@@ -4,6 +4,7 @@ import {ISpeler} from '../../../models/ISpeler'
 
 
 
+
 @Component({
   selector: 'app-speler',
   templateUrl: './speler.component.html',
@@ -15,6 +16,22 @@ export class SpelerComponent  implements OnInit {
   spelersService = inject(SpelersService)
 
   constructor() { }
+
+  get isBeschikbaarVoorWissel(): boolean {
+    return this.spelersService.isSpelerBeschikbaarVoorWissel(this.speler);
+  }
+
+  wisselSpeler() {
+    if (this.isBeschikbaarVoorWissel && this.spelersService.geselecteerdeSpelerVoorWissel) {
+      this.spelersService.wisselSpeler(this.spelersService.geselecteerdeSpelerVoorWissel, this.speler);
+      this.spelersService.beschikbareWisselspelers = [];
+    }
+  }
+
+  wisselKnopGeklikt() {
+    console.log("wisselknop")
+    this.spelersService.selecteerSpelerVoorWissel(this.speler);
+  }
 
 
 

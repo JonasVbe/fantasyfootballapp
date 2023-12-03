@@ -2,6 +2,7 @@ import {Component, inject, OnInit} from '@angular/core'
 import {IWedstrijd} from '../../models/IWedstrijd'
 import {ISpeler} from '../../models/ISpeler'
 
+
 import {SpelersService} from '../services/spelers.service'
 
 @Component({
@@ -16,6 +17,8 @@ export class PloegPage /*implements OnInit */{
     spelerService = inject(SpelersService)
 
     constructor() {}
+
+
 
 
 

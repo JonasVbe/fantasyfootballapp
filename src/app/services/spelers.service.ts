@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import {ISpeler} from '../../models/ISpeler'
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class SpelersService {
 
   spelers: ISpeler[] = []
+  geselecteerdeSpelerVoorWissel: ISpeler | null = null;
+  beschikbareWisselspelers: ISpeler[] = [];
 
   constructor() {
     this.spelers = [
@@ -147,7 +150,7 @@ export class SpelersService {
         positie: 'Aanvaller',
         rugnummer: 8,
         isActief: true,
-        isKapitein: true,
+        isKapitein: false,
         volgendeMatch: 'Speelt uit tegen Cercle Brugge'
       },
       {
@@ -184,8 +187,16 @@ export class SpelersService {
   get reserveSpelers(): ISpeler[] {
     return this.spelers.filter(speler => speler.positie !== 'Doelman' && !speler.isActief)
   }
+  selecteerSpelerVoorWissel(speler: ISpeler) {
+    this.geselecteerdeSpelerVoorWissel = speler;
+    this.beschikbareWisselspelers = this.getBeschikbareSpelersOmTeWisselen(speler);
 
-  /*get beschikbareSpelersOmTeWisselen(gewisseldeSpeler: ISpeler): ISpeler[] {
+  }
+
+  isSpelerBeschikbaarVoorWissel(speler: ISpeler): boolean {
+    return this.beschikbareWisselspelers.includes(speler);
+  }
+  getBeschikbareSpelersOmTeWisselen(gewisseldeSpeler: ISpeler): ISpeler[] {
     let output: ISpeler[] = []
     if(!gewisseldeSpeler) {
       console.log('geen speler geselecteerd om te wisselen.')
@@ -198,20 +209,39 @@ export class SpelersService {
     }
     else{
       if(gewisseldeSpeler.isActief){
-        output.concat(this.reserveSpelers)
+       output = output.concat(this.reserveSpelers)
       }
       else{
+
+        output = output.concat(this.actieveVerdedigers, this.actieveMiddenvelders, this.actieveAanvallers)
 
       }
 
     }
 
     return output
-  }*/
+  }
+
+  async openWisselMenu(speler: ISpeler) {
+    const beschikbareWisselspelers = this.getBeschikbareSpelersOmTeWisselen(speler)
+
+  }
 
 
-  openWisselMenu(speler: ISpeler) {
-    console.log('openWisselMenu', speler)
+  wisselSpeler(spelerUit:ISpeler, spelerIn: ISpeler){
+    if(!spelerUit || !spelerIn){
+      console.log('Geen spelers geselecteerd')
+      return
+    }
+
+    if(spelerUit.isKapitein){
+      spelerUit.isKapitein = false
+      spelerIn.isKapitein = true
+    }
+
+    spelerUit.isActief = !spelerUit.isActief
+    spelerIn.isActief = !spelerIn.isActief
+
   }
 
   maakKapitein(geselecteerdeSpeler: ISpeler) {

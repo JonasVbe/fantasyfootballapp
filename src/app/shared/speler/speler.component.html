@@ -1,6 +1,6 @@
 <ion-item-sliding >
  <ion-item-options side='end'>
-  <ion-item-option color='primary' (click)='spelersService.openWisselMenu(speler)'>
+  <ion-item-option id="open-modal" color='primary' (click)='wisselKnopGeklikt()'>
    <ion-icon slot="icon-only" name='swap-vertical-outline'></ion-icon>
   </ion-item-option>
  </ion-item-options>
@@ -11,7 +11,7 @@
   </ion-item-option>
  </ion-item-options>
 
- <ion-item  lines="full">
+ <ion-item [class.beschikbaar-voor-wissel]="isBeschikbaarVoorWissel" (click)="wisselSpeler()" lines="full">
   <img [src]="'../../../assets/ploeglogos/' + speler.logo" alt="logo" class="logo"/>
   {{ speler.naam }}
   {{ speler.isKapitein ? '(K)' : ''}}
