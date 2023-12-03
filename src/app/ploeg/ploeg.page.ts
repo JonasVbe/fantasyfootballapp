@@ -10,6 +10,7 @@ import {SpelersService} from '../services/spelers.service'
     styleUrls: ['./ploeg.page.scss'],
 })
 export class PloegPage /*implements OnInit */{
+    activeTab = 'mijnploeg'
 
 
     spelerService = inject(SpelersService)

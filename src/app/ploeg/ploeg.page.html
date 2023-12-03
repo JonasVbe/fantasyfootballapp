@@ -11,7 +11,28 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
+
+    <!--tabs-->
+  <ion-segment [(ngModel)]="activeTab">
+    <ion-segment-button value="mijnploeg">
+      <ion-label>Mijn ploeg</ion-label>
+    </ion-segment-button>
+      <ion-segment-button value="punten">
+        <ion-label>Punten</ion-label>
+      </ion-segment-button>
+    <ion-segment-button value="transfers">
+      <ion-label>Transfers</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="competities">
+      <ion-label>Competities</ion-label>
+    </ion-segment-button>
+    </ion-segment>
+
+
+   <!-- content tab mijn ploeg-->
+    <div *ngIf="activeTab === 'mijnploeg'">
+
+
     <ion-list>
       <ion-item-group>
         <ion-item-divider color="light">
@@ -67,7 +88,7 @@
       </ion-item-group>
 
     </ion-list>
-  </ion-content>
+    </div>
 
 
 

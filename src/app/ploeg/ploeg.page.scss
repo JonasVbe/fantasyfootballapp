@@ -7,3 +7,15 @@
 }
 
 
+ion-segment-button {
+  --padding-top: 5px;
+  --padding-bottom: 5px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --min-height: 35px;
+}
+
+ion-label {
+  font-weight: normal;
+  font-size: 0.8em;
+}
