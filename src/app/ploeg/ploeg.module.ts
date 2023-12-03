@@ -7,14 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { PloegPageRoutingModule } from './ploeg-routing.module';
 
 import { PloegPage } from './ploeg.page';
+import {SharedModule} from '../shared/shared.module'
+import {SpelerComponent} from '../shared/speler/speler.component'
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PloegPageRoutingModule
+    PloegPageRoutingModule,
+    SharedModule
   ],
-  declarations: [PloegPage]
+  declarations: [PloegPage, SpelerComponent]
 })
 export class PloegPageModule {}

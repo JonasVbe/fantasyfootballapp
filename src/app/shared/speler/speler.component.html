@@ -1,0 +1,24 @@
+<ion-item-sliding >
+ <ion-item-options side='end'>
+  <ion-item-option color='primary' (click)='spelersService.openWisselMenu(speler)'>
+   <ion-icon slot="icon-only" name='swap-vertical-outline'></ion-icon>
+  </ion-item-option>
+ </ion-item-options>
+
+ <ion-item-options side='start'>
+  <ion-item-option color='success' (click)='spelersService.maakKapitein(speler)'>
+   Maak kapitein
+  </ion-item-option>
+ </ion-item-options>
+
+ <ion-item  lines="full">
+  <img [src]="'../../../assets/ploeglogos/' + speler.logo" alt="logo" class="logo"/>
+  {{ speler.naam }}
+  {{ speler.isKapitein ? '(K)' : ''}}
+  <div class="item-end">
+   <span class="volgendeMatchInfo">{{speler.volgendeMatch}}</span>
+  </div>
+  <!--<ion-button slot="end" (click)="openWisselMenu(speler)">Wissel</ion-button>-->
+ </ion-item>
+
+</ion-item-sliding>

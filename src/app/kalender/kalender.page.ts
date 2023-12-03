@@ -85,7 +85,7 @@ export class KalenderPage implements OnInit {
       },
       {
         id: '8',
-        thuisploeg: 'Union Saint-Gilloise',
+        thuisploeg: 'Union SG',
         uitploeg: 'Cercle Brugge',
         thuisscore: 0,
         uitScore: 0,

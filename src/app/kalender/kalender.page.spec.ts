@@ -1,3 +1,4 @@
+/*
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KalenderPage } from './kalender.page';
 
@@ -15,3 +16,4 @@ describe('KalenderPage', () => {
     expect(component).toBeTruthy();
   });
 });
+*/

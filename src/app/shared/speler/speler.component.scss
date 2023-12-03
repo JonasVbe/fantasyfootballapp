@@ -1,0 +1,15 @@
+.volgendeMatchInfo {
+  font-size: 0.7em; /* Maak de tekst kleiner */
+  position: relative;
+  top: 3px; /* Positie iets lager */
+}
+
+.item-end {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.logo {
+  margin-right: 10px;
+}
