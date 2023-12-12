@@ -18,19 +18,19 @@ export class SpelerComponent  implements OnInit {
   constructor() { }
 
   get isBeschikbaarVoorWissel(): boolean {
-    return this.spelersService.isSpelerBeschikbaarVoorWissel(this.speler);
+    return this.spelersService.isSpelerBeschikbaarVoorWissel(this.speler)
   }
 
   wisselSpeler() {
     if (this.isBeschikbaarVoorWissel && this.spelersService.geselecteerdeSpelerVoorWissel) {
-      this.spelersService.wisselSpeler(this.spelersService.geselecteerdeSpelerVoorWissel, this.speler);
-      this.spelersService.beschikbareWisselspelers = [];
+      this.spelersService.wisselSpeler(this.spelersService.geselecteerdeSpelerVoorWissel, this.speler)
+      this.spelersService.beschikbareWisselspelers = []
     }
   }
 
   wisselKnopGeklikt() {
     console.log("wisselknop")
-    this.spelersService.selecteerSpelerVoorWissel(this.speler);
+    this.spelersService.selecteerSpelerVoorWissel(this.speler)
   }
 
 
