@@ -113,8 +113,16 @@ Er zal een database gebruikt moeten worden om alles wat met het spel, te maken h
 
 ### Plugins
 Plugin om pushberichten te sturen bv 2 uur voor het verstrijken van de deadline voor de komende speeldag.
+Misschien een social media Share plugin?
+
 
 # Feedback
+Zeer mooie en uitgebreide beschrijving. Leuk dat je je project begint met een woordje uitleg waarover de app zal gaan.
+Jij bent de enige van de studenten wie ik verbeterd heb dat dit gedaan heeft.
 
-**Wordt verder aangevuld door jouw docent.**
+Het enige waar ik me wat zorgen over maak is de complexiteit van de app. Je lijst momenteel heel veel functionaliteit en business rules op. Is dit haalbaar in de gegeven tijd? Zoja, des te beter natuurlijk. Zoniet, stel dan voor jezelf een lijstje voor jezelf op met must haves en nice-to-haves. Beter een beperkt project waarin alles correct werkt dan een groot project gevuld met bugs.
 
+Goed dat je gebruik gaat maken van Api's en Services. Kan je ook al vertellen specifiek welke API's je zal gebruiken?
+
+
+2/2
