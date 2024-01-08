@@ -17,6 +17,10 @@ const config: CapacitorConfig = {
       androidSpinnerStyle: 'large', // Stijl van de spinner op Android
       iosSpinnerStyle: 'small', // Stijl van de spinner op iOS
       spinnerColor: '#999999' // Kleur van de spinner
+    },
+    FirebaseAuthentication: {
+      skipNativeAuth: false,
+      providers: ['google.com'],
     }
   }
 };
