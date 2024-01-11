@@ -8,11 +8,14 @@ import {ISpeler} from '../../models/ISpeler'
 export class SpelersService {
 
   spelers: ISpeler[] = []
+  spelersVoorTransfers: ISpeler[] = []
   geselecteerdeSpelerVoorWissel: ISpeler | null = null
   beschikbareWisselspelers: ISpeler[] = []
 
   constructor() {
-    this.spelers = [
+
+
+    /*this.spelers = [
       {
         id: 'blabla1',
         naam: 'Simon Mignolet',
@@ -163,9 +166,22 @@ export class SpelersService {
         isKapitein: false,
         volgendeMatch: 'Speelt uit tegen Anderlecht'
       },
-    ]
+    ]*/
   }
 
+  get doelmannen(): ISpeler[] {
+    return this.spelersVoorTransfers.filter(speler => speler.positie === 'Doelman')
+  }
+  get verdedigers(): ISpeler[] {
+    return this.spelersVoorTransfers.filter(speler => speler.positie === 'Verdediger')
+  }
+
+  get middenvelders(): ISpeler[] {
+    return this.spelersVoorTransfers.filter(speler => speler.positie === 'Middenvelder')
+  }
+  get aanvallers(): ISpeler[] {
+    return this.spelersVoorTransfers.filter(speler => speler.positie === 'Aanvaller')
+  }
   get actieveDoelman(): ISpeler | undefined {
     return this.spelers.find(speler => speler.positie === 'Doelman' && speler.isActief)
   }
@@ -183,7 +199,10 @@ export class SpelersService {
   get reserveDoelman(): ISpeler | undefined {
     return this.spelers.find(speler => speler.positie === 'Doelman' && !speler.isActief)
   }
+  getSpelerForTransfer(id: string): ISpeler | undefined {
+    return this.spelersVoorTransfers.find(speler => speler.id === id)
 
+  }
   get reserveSpelers(): ISpeler[] {
     return this.spelers.filter(speler => speler.positie !== 'Doelman' && !speler.isActief)
   }
@@ -321,6 +340,29 @@ export class SpelersService {
       default:
         return ''
     }
+  }
+
+  getPlaceholderSpelers() {
+    const placeholders: ISpeler[]  = [];
+    const posities = ['Doelman', 'Verdediger', 'Middenvelder', 'Aanvaller'];
+    const aantallen = [2, 5, 5, 3]; // Aantal voor elke positie
+
+    posities.forEach((positie, index) => {
+      for (let i = 0; i < aantallen[index]; i++) {
+        placeholders.push({
+          id: `ph${i + 1}`,
+          naam: `${positie} ${i + 1}`,
+          ploeg: 'Gent',
+          positie: positie,
+          isActief: true,
+          rugnummer: 8,
+          isKapitein: false,
+          volgendeMatch: ''
+        });
+      }
+    });
+
+    return placeholders;
   }
 
 

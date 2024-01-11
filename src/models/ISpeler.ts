@@ -2,7 +2,7 @@ export interface ISpeler {
   id: string
   naam: string
   ploeg: string
-  positie: 'Doelman' | 'Verdediger' | 'Middenvelder' | 'Aanvaller'
+  positie: string
   rugnummer: number
   isActief: boolean
   isKapitein: boolean

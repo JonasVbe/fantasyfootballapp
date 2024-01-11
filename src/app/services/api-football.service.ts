@@ -28,4 +28,6 @@ export class ApiFootballService {
 
     return this.#http.get<IFixtureResponse>(`${environment.apiFixtureUrl}?league=${this.#league}&season=${this.#season}`, { headers });
   }
+
+
 }
