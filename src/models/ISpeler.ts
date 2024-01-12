@@ -1,4 +1,4 @@
-export interface ISpelerOLD {
+export interface ISpeler {
   id: string
   naam: string
   voornaam?: string | null

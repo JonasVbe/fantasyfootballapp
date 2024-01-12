@@ -35,15 +35,15 @@ export class PloegPage implements OnInit {
     }
 
     setSpelersData(): void {
-
+        this.spelerService.initialSetSpelersVoorTransfers()
       //hier nog spelersarray ophalen
 
-      if(this.spelerService.spelers.length === 0){
+      /*if(this.spelerService.spelers.length === 0){
         this.spelerService.spelersVoorTransfers = this.spelerService.getPlaceholderSpelers()
       }
       else{
         this.spelerService.spelersVoorTransfers = this.spelerService.spelers
-      }
+      }*/
 
     }
 

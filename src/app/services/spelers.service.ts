@@ -1,5 +1,9 @@
-import { Injectable } from '@angular/core'
+import {inject, Injectable} from '@angular/core'
 import {ISpeler} from '../../models/ISpeler'
+import {ApiFootballService} from './api-football.service'
+import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject'
+import {ISpelerData} from '../../models/ISpelerApiResponse'
+import {firstValueFrom} from 'rxjs'
 
 
 @Injectable({
@@ -11,6 +15,12 @@ export class SpelersService {
   spelersVoorTransfers: ISpeler[] = []
   geselecteerdeSpelerVoorWissel: ISpeler | null = null
   beschikbareWisselspelers: ISpeler[] = []
+  isGeladenSpelerData:boolean = true
+
+  apiService = inject(ApiFootballService)
+  #spelersData: ISpelerData[] = []
+  #dataLoaded = false
+
 
   constructor() {
 
@@ -168,7 +178,38 @@ export class SpelersService {
       },
     ]*/
   }
+  initialSetSpelersVoorTransfers() {
 
+    if(this.spelers.length === 0){
+      this.spelersVoorTransfers = this.getPlaceholderSpelers()
+    }
+    else{
+      this.spelersVoorTransfers = this.spelers
+    }
+    console.log(this.spelersVoorTransfers)
+
+  }
+  getInkomendeSpelersVoorPositie(positie: string | undefined): ISpeler[] {
+    if (!positie) {
+      console.warn('Geen positie meegegeven')
+      return []
+    }
+
+
+
+    //statement voor test doeleinden, later wegdoen.
+    if(positie === "any"){
+      return this.#spelersData.map(this.transformToISpeler.bind(this))
+
+    }
+
+    const positieEngels = this.getEngelsePosities(positie)
+
+    return this.#spelersData.filter(sd => sd.statistics[0].games.position === positieEngels)
+      .map(this.transformToISpeler.bind(this))
+
+
+  }
   get doelmannen(): ISpeler[] {
     return this.spelersVoorTransfers.filter(speler => speler.positie === 'Doelman')
   }
@@ -341,7 +382,9 @@ export class SpelersService {
         return ''
     }
   }
-
+  public isDataLoaded(): boolean {
+    return this.#dataLoaded;
+  }
   getPlaceholderSpelers() {
     const placeholders: ISpeler[]  = [];
     const posities = ['Doelman', 'Verdediger', 'Middenvelder', 'Aanvaller'];
@@ -350,12 +393,12 @@ export class SpelersService {
     posities.forEach((positie, index) => {
       for (let i = 0; i < aantallen[index]; i++) {
         placeholders.push({
-          id: `ph${i + 1}`,
+          id: `ph${i + 1}${index}`,
           naam: `${positie} ${i + 1}`,
-          ploeg: 'Gent',
+          ploeg: '',
           positie: positie,
-          isActief: true,
-          rugnummer: 8,
+          isActief: false,
+          rugnummer: 0,
           isKapitein: false,
           volgendeMatch: ''
         });
@@ -363,6 +406,78 @@ export class SpelersService {
     });
 
     return placeholders;
+  }
+
+  async loadSpelersData(): Promise<void> {
+    if (!this.#dataLoaded) {
+      this.#spelersData = await firstValueFrom(this.apiService.getSpelers());
+      this.#dataLoaded = true;
+    }
+  }
+
+  getSpelersData(): ISpelerData[] {
+    return this.#spelersData;
+  }
+
+  private transformToISpeler = (spelerData: ISpelerData): ISpeler => {
+    const statisticsindex: number = /*spelerData.statistics.length - 1*/ 0
+    let ratingsnumber: string | number | null= spelerData.statistics[statisticsindex].games.rating
+    if(ratingsnumber !== null){
+      ratingsnumber = parseInt(ratingsnumber)
+    }
+    else{
+      ratingsnumber = 0
+    }
+
+
+
+
+    return {
+      // Map properties from ISpelerData to ISpeler
+      id: spelerData.player.id.toString(),
+      naam: spelerData.player.name,
+      voornaam: spelerData.player.firstname,
+      achternaam: spelerData.player.lastname,
+      ploeg: spelerData.statistics[statisticsindex].team.name,
+      ploegId: spelerData.statistics[statisticsindex].team.id,
+      positie: this.getNederlandsePosities(spelerData.statistics[statisticsindex].games.position),
+      rugnummer: spelerData.statistics[statisticsindex].games.number,
+      isActief: false,
+      isKapitein: false,
+      volgendeMatch: "nog doen",
+      rating: ratingsnumber,
+      logo: spelerData.statistics[statisticsindex].team.logo
+    }
+  }
+
+  getNederlandsePosities(posities: string): string {
+    switch (posities) {
+      case 'Goalkeeper':
+        return 'Doelman'
+      case 'Defender':
+        return 'Verdediger'
+      case 'Midfielder':
+        return 'Middenvelder'
+      case 'Attacker':
+        return 'Aanvaller'
+      default:
+        return ''
+    }
+  }
+
+  getEngelsePosities(posities: string): string {
+    switch (posities) {
+      case 'Doelman':
+        return 'Goalkeeper'
+      case 'Verdediger':
+        return 'Defender'
+      case 'Middenvelder':
+        return 'Midfielder'
+      case 'Aanvaller':
+        return 'Attacker'
+      default:
+        return ''
+    }
   }
 
 

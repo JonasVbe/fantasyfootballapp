@@ -36,5 +36,20 @@
 </ion-header>
 
 <ion-content>
-  <!-- Hier komt je lijst met spelers -->
+  <ng-container *ngIf="!spelerService.isGeladenSpelerData; else dataLoaded">
+    <ion-spinner name="crescent"></ion-spinner>
+  </ng-container>
+
+  <ng-template #dataLoaded>
+    <ion-list>
+      <ion-item-group>
+        <ion-item-divider color="light">
+          <ion-label>{{ getPositieLabel() }}</ion-label>
+        </ion-item-divider>
+
+        <app-transfer-speler *ngFor="let speler of inkomendeSpelers" [speler]="speler"></app-transfer-speler>
+
+      </ion-item-group>
+    </ion-list>
+  </ng-template>
 </ion-content>

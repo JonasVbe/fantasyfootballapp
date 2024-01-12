@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { SpelerTransfersPageRoutingModule } from './speler-transfers-routing.module';
 
 import { SpelerTransfersPage } from './speler-transfers.page';
+import {SharedModule} from '../../shared/shared.module'
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    SpelerTransfersPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        SpelerTransfersPageRoutingModule,
+        SharedModule
+    ],
   declarations: [SpelerTransfersPage]
 })
 export class SpelerTransfersPageModule {}

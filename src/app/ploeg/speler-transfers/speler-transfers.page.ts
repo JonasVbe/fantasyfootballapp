@@ -17,8 +17,11 @@ export class SpelerTransfersPage implements OnInit {
 
   id?: string = undefined
   wisselSpeler: ISpeler | undefined = undefined
-  toonZoekveld: boolean = false;
-  geselecteerdeSpelerNaam: string = "";
+  toonZoekveld: boolean = false
+  positieLabel: string  = "foutje"
+
+
+  inkomendeSpelers: ISpeler[] = [];
 
 
   constructor() { }
@@ -28,29 +31,38 @@ export class SpelerTransfersPage implements OnInit {
     this.setSpelerData()
   }
 
-  setSpelerData(): void {
+   setSpelerData(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
 
-    // No need to continue with the function if no parameter was specified.
     if (id === null) {
       return
     }
 
-    //setlist
-    if(this.spelerService.spelers.length === 0){
-      this.spelerService.spelersVoorTransfers = this.spelerService.getPlaceholderSpelers()
-    }
-    else{
-      this.spelerService.spelersVoorTransfers = this.spelerService.spelers
-    }
-
-
     this.id = id
 
     this.wisselSpeler = this.spelerService.getSpelerForTransfer(this.id)
+    this.positieLabel = this.getPositieLabel()
+
+    this.inkomendeSpelers =  this.spelerService.getInkomendeSpelersVoorPositie(this.wisselSpeler?.positie)
+     console.log(this.inkomendeSpelers)
 
 
+  }
 
+  getPositieLabel(): string {
+
+      switch (this.wisselSpeler?.positie) {
+         case "Doelman":
+            return "Doelmannen"
+          case "Verdediger":
+            return "Verdedigers"
+          case "Middenvelder":
+            return "Middenvelders"
+          case "Aanvaller":
+            return "Aanvallers"
+          default:
+            return "Foutje"
+    }
   }
 
 }

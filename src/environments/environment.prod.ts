@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  apiBaseUrl: 'https://api-football-v1.p.rapidapi.com',
   apiFixtureUrl: 'https://api-football-v1.p.rapidapi.com/v3/fixtures',
   apiFootballKey: 'e1b78c6d0cmsh6d18875822c8685p1e86e0jsn73d5eaeaf629',
   apiFootballHost: 'api-football-v1.p.rapidapi.com',

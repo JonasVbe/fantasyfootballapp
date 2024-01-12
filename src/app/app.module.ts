@@ -10,10 +10,11 @@ import { AppRoutingModule } from './app-routing.module';
 import {provideFirebaseApp, initializeApp} from '@angular/fire/app';
 import {environment} from '../environments/environment';
 import {getAuth, provideAuth} from '@angular/fire/auth';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule,
     // Firebase main import.
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     // Firebase authentication import.
