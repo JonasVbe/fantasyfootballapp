@@ -22,7 +22,7 @@
         <ion-label>Punten</ion-label>
       </ion-segment-button>
     <ion-segment-button value="transfers">
-      <ion-label>Transfers</ion-label>
+      <ion-label>{{ tabNaam }}</ion-label>
     </ion-segment-button>
     <ion-segment-button value="competities">
       <ion-label>Competities</ion-label>
@@ -34,64 +34,136 @@
 
    <!-- content tab mijn ploeg-->
     <div *ngIf="activeTab === 'mijnploeg'">
+      <div *ngIf="spelerService.spelers.length === 0">
+        <p>Koop eerst spelers</p>
+      </div>
+      <div *ngIf="spelerService.spelers.length > 0">
+
+        <ion-list>
+          <ion-item-group>
+            <ion-item-divider color="light">
+              <ion-label>Doelman</ion-label>
+            </ion-item-divider>
+
+            <app-speler *ngIf="spelerService.actieveDoelman" [speler]="spelerService.actieveDoelman"></app-speler>
+
+          </ion-item-group>
 
 
-    <ion-list>
-      <ion-item-group>
-        <ion-item-divider color="light">
-          <ion-label>Doelman</ion-label>
-        </ion-item-divider>
+          <ion-item-group>
+            <ion-item-divider color="light">
+              <ion-label>Verdedigers</ion-label>
+            </ion-item-divider>
 
-        <app-speler *ngIf="spelerService.actieveDoelman" [speler]="spelerService.actieveDoelman"></app-speler>
-
-      </ion-item-group>
+            <app-speler *ngFor="let speler of spelerService.actieveVerdedigers" [speler]="speler"></app-speler>
 
 
-      <ion-item-group>
-        <ion-item-divider color="light">
-          <ion-label>Verdedigers</ion-label>
-        </ion-item-divider>
+          </ion-item-group>
 
-        <app-speler *ngFor="let speler of spelerService.actieveVerdedigers" [speler]="speler"></app-speler>
+          <ion-item-group>
+            <ion-item-divider color="light">
+              <ion-label>MiddenVelders</ion-label>
+            </ion-item-divider>
+            <app-speler *ngFor="let speler of spelerService.actieveMiddenvelders" [speler]="speler"/>
 
+          </ion-item-group>
 
-      </ion-item-group>
-
-      <ion-item-group>
-        <ion-item-divider color="light">
-          <ion-label>MiddenVelders</ion-label>
-        </ion-item-divider>
-        <app-speler *ngFor="let speler of spelerService.actieveMiddenvelders" [speler]="speler"/>
-
-      </ion-item-group>
-
-      <ion-item-group>
-        <ion-item-divider color="light">
-          <ion-label>{{ spelerService.actieveAanvallers.length === 1 ? 'Aanvaller' : 'Aanvallers' }}</ion-label>
-        </ion-item-divider>
-        <app-speler *ngFor="let speler of spelerService.actieveAanvallers" [speler]="speler"/>
-      </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider color="light">
+              <ion-label>{{ spelerService.actieveAanvallers.length === 1 ? 'Aanvaller' : 'Aanvallers' }}</ion-label>
+            </ion-item-divider>
+            <app-speler *ngFor="let speler of spelerService.actieveAanvallers" [speler]="speler"/>
+          </ion-item-group>
 
 
-      <!-- Hieronder reserve spelers -->
+          <!-- Hieronder reserve spelers -->
 
-      <ion-item-group>
-        <ion-item-divider color="light">
-          <ion-label>Reserve Doelman</ion-label>
-        </ion-item-divider>
-        <app-speler *ngIf="spelerService.reserveDoelman" [speler]="spelerService.reserveDoelman"></app-speler>
+          <ion-item-group>
+            <ion-item-divider color="light">
+              <ion-label>Reserve Doelman</ion-label>
+            </ion-item-divider>
+            <app-speler *ngIf="spelerService.reserveDoelman" [speler]="spelerService.reserveDoelman"></app-speler>
+          </ion-item-group>
 
-      </ion-item-group>
-
-      <ion-item-group>
-        <ion-item-divider color="light">
-          <ion-label>Wissel Spelers</ion-label>
-        </ion-item-divider>
-        <app-speler *ngFor="let speler of spelerService.reserveSpelers" [speler]="speler"></app-speler>
-      </ion-item-group>
-
-    </ion-list>
+          <ion-item-group>
+            <ion-item-divider color="light">
+              <ion-label>Wissel Spelers</ion-label>
+            </ion-item-divider>
+            <app-speler *ngFor="let speler of spelerService.reserveSpelers" [speler]="speler"></app-speler>
+          </ion-item-group>
+        </ion-list>
+      </div>
     </div>
+
+ <!-- content tab punten-->
+  <div *ngIf="activeTab === 'punten'">
+    <div *ngIf="spelerService.spelers.length === 0">
+      <p>Koop eerst spelers</p>
+    </div>
+    <div *ngIf="spelerService.spelers.length > 0">
+      <ion-item>Work in progress</ion-item>
+    </div>
+  </div>
+git 
+  <!-- transfer pagina-->
+  <div *ngIf="activeTab === 'transfers'">
+
+    <ng-container *ngIf="spelerService.isDataLoaded(); else loading">
+      <ion-list>
+        <ion-item-group>
+          <ion-item-divider color="light">
+            <ion-label>Doelmannen</ion-label>
+          </ion-item-divider>
+
+
+          <app-transfer-speler *ngFor="let speler of spelerService.doelmannen" [speler]="speler"></app-transfer-speler>
+
+        </ion-item-group>
+
+        <ion-item-group>
+          <ion-item-divider color="light">
+            <ion-label>Verdedigers</ion-label>
+          </ion-item-divider>
+
+          <app-transfer-speler *ngFor="let speler of spelerService.verdedigers" [speler]="speler"></app-transfer-speler>
+
+
+        </ion-item-group>
+
+        <ion-item-group>
+          <ion-item-divider color="light">
+            <ion-label>MiddenVelders</ion-label>
+          </ion-item-divider>
+          <app-transfer-speler *ngFor="let speler of spelerService.middenvelders" [speler]="speler"/>
+
+        </ion-item-group>
+
+        <ion-item-group>
+          <ion-item-divider color="light">
+            <ion-label>Aanvallers</ion-label>
+          </ion-item-divider>
+          <app-transfer-speler *ngFor="let speler of spelerService.aanvallers" [speler]="speler"/>
+        </ion-item-group>
+      </ion-list>
+    </ng-container>
+
+    <ng-template #loading>
+      <div class="ion-text-center ion-padding">
+        <ion-spinner></ion-spinner>
+      </div>
+    </ng-template>
+
+    </div>
+
+
+
+
+
+
+
+  <div *ngIf="activeTab === 'competities'">
+    <ion-item>Work in progress comp</ion-item>
+  </div>
 
 
 

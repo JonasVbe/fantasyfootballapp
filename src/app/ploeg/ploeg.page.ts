@@ -10,8 +10,12 @@ import {SpelersService} from '../services/spelers.service'
     templateUrl: './ploeg.page.html',
     styleUrls: ['./ploeg.page.scss'],
 })
-export class PloegPage /*implements OnInit */{
+export class PloegPage implements OnInit {
     activeTab = 'mijnploeg'
+
+  get tabNaam() {
+    return this.spelerService.spelers.length === 0 ? 'Koop Spelers' : 'Transfers';
+  }
 
 
     spelerService = inject(SpelersService)
@@ -26,7 +30,21 @@ export class PloegPage /*implements OnInit */{
 
 
 
-  /*  ngOnInit() {
-    }*/
+    ngOnInit() {
+      this.setSpelersData()
+    }
+
+    setSpelersData(): void {
+        this.spelerService.initialSetSpelersVoorTransfers()
+      //hier nog spelersarray ophalen
+
+      /*if(this.spelerService.spelers.length === 0){
+        this.spelerService.spelersVoorTransfers = this.spelerService.getPlaceholderSpelers()
+      }
+      else{
+        this.spelerService.spelersVoorTransfers = this.spelerService.spelers
+      }*/
+
+    }
 
 }

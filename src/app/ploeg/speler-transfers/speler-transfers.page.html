@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>{{ wisselSpeler?.naam }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!toonZoekveld" (click)="toonZoekveld = true">
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="toonZoekveld" (click)="toonZoekveld = false">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="toonZoekveld">
+    <ion-searchbar placeholder="Zoek naar spelers"></ion-searchbar>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment>
+      <ion-segment-button value="naam">
+        <ion-label>Naam</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="prijs">
+        <ion-label>Prijs</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="punten">
+        <ion-label>TP</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="!spelerService.isGeladenSpelerData; else dataLoaded">
+    <ion-spinner name="crescent"></ion-spinner>
+  </ng-container>
+
+  <ng-template #dataLoaded>
+    <ion-list>
+      <ion-item-group>
+        <ion-item-divider color="light">
+          <ion-label>{{ getPositieLabel() }}</ion-label>
+        </ion-item-divider>
+
+        <app-transfer-speler *ngFor="let speler of inkomendeSpelers" [speler]="speler"></app-transfer-speler>
+
+      </ion-item-group>
+    </ion-list>
+  </ng-template>
+</ion-content>

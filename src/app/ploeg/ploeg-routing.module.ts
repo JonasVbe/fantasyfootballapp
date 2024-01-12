@@ -7,7 +7,12 @@ const routes: Routes = [
   {
     path: '',
     component: PloegPage
+  },
+  {
+    path: 'speler-transfers/:id',
+    loadChildren: () => import('./speler-transfers/speler-transfers.module').then( m => m.SpelerTransfersPageModule)
   }
+
 ];
 
 @NgModule({
