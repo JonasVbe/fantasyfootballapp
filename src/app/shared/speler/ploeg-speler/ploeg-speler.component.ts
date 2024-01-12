@@ -9,6 +9,7 @@ export class PloegSpelerComponent  implements OnInit {
 
   constructor() { }
 
+
   ngOnInit() {}
 
 }

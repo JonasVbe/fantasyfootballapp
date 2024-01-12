@@ -17,39 +17,36 @@
   </ion-toolbar>
 
   <ion-toolbar *ngIf="toonZoekveld">
-    <ion-searchbar placeholder="Zoek naar spelers"></ion-searchbar>
+    <ion-searchbar placeholder="Zoek naar spelers" (ionInput)="zoekTerm$.next($event.target.value || '')"></ion-searchbar>
   </ion-toolbar>
 
   <ion-toolbar>
-    <ion-segment>
-      <ion-segment-button value="naam">
+    <ion-segment [(ngModel)]="sorteerKeuze" (ionChange)="onSorteerKeuzeGewijzigd($event.detail.value)">
+      <ion-segment-button value="naam" (click)="checkSorteerKeuze('naam')">
         <ion-label>Naam</ion-label>
+        <ion-icon *ngIf="sorteerKeuze === 'naam'" [name]="omgekeerdeSortering ? 'arrow-down-outline' : 'arrow-up-outline'"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button value="prijs">
+      <ion-segment-button value="prijs" (click)="checkSorteerKeuze('prijs')">
         <ion-label>Prijs</ion-label>
+        <ion-icon *ngIf="sorteerKeuze === 'prijs'" [name]="omgekeerdeSortering ? 'arrow-down-outline' : 'arrow-up-outline'"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button value="punten">
+      <!--<ion-segment-button value="punten">
         <ion-label>TP</ion-label>
-      </ion-segment-button>
+      </ion-segment-button>-->
     </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ng-container *ngIf="!spelerService.isGeladenSpelerData; else dataLoaded">
-    <ion-spinner name="crescent"></ion-spinner>
-  </ng-container>
-
-  <ng-template #dataLoaded>
     <ion-list>
       <ion-item-group>
         <ion-item-divider color="light">
           <ion-label>{{ getPositieLabel() }}</ion-label>
+          <ion-note slot="end">Veeg naar links op speler voor transfer.</ion-note>
         </ion-item-divider>
 
-        <app-transfer-speler *ngFor="let speler of inkomendeSpelers" [speler]="speler"></app-transfer-speler>
+        <app-transfer-speler-in *ngFor="let speler of gefilterdeSpelers" [speler]="speler"></app-transfer-speler-in>
 
       </ion-item-group>
     </ion-list>
-  </ng-template>
 </ion-content>

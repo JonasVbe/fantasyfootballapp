@@ -13,10 +13,7 @@ export class TransferSpelerComponent  implements OnInit {
   constructor() { }
 
 
-  transferKnopGeklikt() {
-    console.log("transferknop")
-    this.spelersService.selecteerSpelerVoorWissel(this.speler)
-  }
+
   ngOnInit() {}
 
 }

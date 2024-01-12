@@ -10,14 +10,18 @@ import {firstValueFrom} from 'rxjs'
   providedIn: 'root'
 })
 export class SpelersService {
+  apiService = inject(ApiFootballService)
 
   spelers: ISpeler[] = []
-  spelersVoorTransfers: ISpeler[] = []
+
   geselecteerdeSpelerVoorWissel: ISpeler | null = null
   beschikbareWisselspelers: ISpeler[] = []
-  isGeladenSpelerData:boolean = true
 
-  apiService = inject(ApiFootballService)
+
+  spelersVoorTransfers: ISpeler[] = []
+  geselecteerdeSpelerVoorTransfer: ISpeler | undefined = undefined
+  origineleSpelersVoorTransfers: ISpeler[] = []
+
   #spelersData: ISpelerData[] = []
   #dataLoaded = false
 
@@ -178,17 +182,37 @@ export class SpelersService {
       },
     ]*/
   }
+
   initialSetSpelersVoorTransfers() {
 
-    if(this.spelers.length === 0){
-      this.spelersVoorTransfers = this.getPlaceholderSpelers()
-    }
-    else{
-      this.spelersVoorTransfers = this.spelers
-    }
-    console.log(this.spelersVoorTransfers)
-
+      if (this.spelers.length === 0) {
+        this.spelersVoorTransfers = this.getPlaceholderSpelers()
+      } else {
+        this.spelersVoorTransfers = this.spelers
+      }
+    this.origineleSpelersVoorTransfers = [...this.spelersVoorTransfers];
   }
+  voerTransferUit(nieuweSpeler: ISpeler) {
+
+    if(this.geselecteerdeSpelerVoorTransfer?.isKapitein){
+      nieuweSpeler.isKapitein = true
+    }
+    if(this.geselecteerdeSpelerVoorTransfer?.isActief){
+      nieuweSpeler.isActief = true
+    }
+
+    const index = this.spelersVoorTransfers.findIndex(speler => speler.id === this.geselecteerdeSpelerVoorTransfer?.id);
+    if (index !== -1) {
+      this.spelersVoorTransfers[index] = nieuweSpeler
+    }
+  }
+
+  zijnSpelersGewijzigd(): boolean {
+    return !this.spelersVoorTransfers.every((speler, index) =>
+      speler.id === this.origineleSpelersVoorTransfers[index]?.id)
+  }
+
+
   getInkomendeSpelersVoorPositie(positie: string | undefined): ISpeler[] {
     if (!positie) {
       console.warn('Geen positie meegegeven')
@@ -196,9 +220,8 @@ export class SpelersService {
     }
 
 
-
     //statement voor test doeleinden, later wegdoen.
-    if(positie === "any"){
+    if (positie === 'any') {
       return this.#spelersData.map(this.transformToISpeler.bind(this))
 
     }
@@ -210,9 +233,14 @@ export class SpelersService {
 
 
   }
+  heeftPlaceholderSpeler(): boolean {
+    return this.spelersVoorTransfers.some(speler => speler.ploeg === 'placeholder');
+  }
+
   get doelmannen(): ISpeler[] {
     return this.spelersVoorTransfers.filter(speler => speler.positie === 'Doelman')
   }
+
   get verdedigers(): ISpeler[] {
     return this.spelersVoorTransfers.filter(speler => speler.positie === 'Verdediger')
   }
@@ -220,9 +248,11 @@ export class SpelersService {
   get middenvelders(): ISpeler[] {
     return this.spelersVoorTransfers.filter(speler => speler.positie === 'Middenvelder')
   }
+
   get aanvallers(): ISpeler[] {
     return this.spelersVoorTransfers.filter(speler => speler.positie === 'Aanvaller')
   }
+
   get actieveDoelman(): ISpeler | undefined {
     return this.spelers.find(speler => speler.positie === 'Doelman' && speler.isActief)
   }
@@ -230,6 +260,7 @@ export class SpelersService {
   get actieveVerdedigers(): ISpeler[] {
     return this.spelers.filter(speler => speler.positie === 'Verdediger' && speler.isActief)
   }
+
   get actieveMiddenvelders(): ISpeler[] {
     return this.spelers.filter(speler => speler.positie === 'Middenvelder' && speler.isActief)
   }
@@ -237,16 +268,20 @@ export class SpelersService {
   get actieveAanvallers(): ISpeler[] {
     return this.spelers.filter(speler => speler.positie === 'Aanvaller' && speler.isActief)
   }
+
   get reserveDoelman(): ISpeler | undefined {
     return this.spelers.find(speler => speler.positie === 'Doelman' && !speler.isActief)
   }
+
   getSpelerForTransfer(id: string): ISpeler | undefined {
     return this.spelersVoorTransfers.find(speler => speler.id === id)
 
   }
+
   get reserveSpelers(): ISpeler[] {
     return this.spelers.filter(speler => speler.positie !== 'Doelman' && !speler.isActief)
   }
+
   selecteerSpelerVoorWissel(speler: ISpeler) {
     this.geselecteerdeSpelerVoorWissel = speler
     this.beschikbareWisselspelers = this.getBeschikbareSpelersOmTeWisselen(speler)
@@ -256,14 +291,15 @@ export class SpelersService {
   isSpelerBeschikbaarVoorWissel(speler: ISpeler): boolean {
     return this.beschikbareWisselspelers.includes(speler)
   }
+
   getBeschikbareSpelersOmTeWisselen(gewisseldeSpeler: ISpeler): ISpeler[] {
 
-    if(!gewisseldeSpeler) {
+    if (!gewisseldeSpeler) {
       console.log('geen speler geselecteerd om te wisselen.')
       return []
     }
 
-    if(gewisseldeSpeler.positie === 'Doelman') {
+    if (gewisseldeSpeler.positie === 'Doelman') {
       const wisselDoelman = gewisseldeSpeler.isActief ? this.reserveDoelman : this.actieveDoelman
       return [wisselDoelman!]
     }
@@ -306,15 +342,13 @@ export class SpelersService {
   }
 
 
-
-
-  wisselSpeler(spelerUit:ISpeler, spelerIn: ISpeler){
-    if(!spelerUit || !spelerIn){
+  wisselSpeler(spelerUit: ISpeler, spelerIn: ISpeler) {
+    if (!spelerUit || !spelerIn) {
       console.log('Geen spelers geselecteerd')
       return
     }
 
-    if(spelerUit.isKapitein){
+    if (spelerUit.isKapitein) {
       spelerUit.isKapitein = false
       spelerIn.isKapitein = true
     }
@@ -325,7 +359,7 @@ export class SpelersService {
   }
 
   maakKapitein(geselecteerdeSpeler: ISpeler) {
-    if(!geselecteerdeSpeler){
+    if (!geselecteerdeSpeler) {
       console.log('Geen speler geselecteerd')
       return
     }
@@ -337,99 +371,64 @@ export class SpelersService {
     }
   }
 
-  setLogo(){
-    this.spelers.forEach(speler => {
-      if (!speler.logo) {
-        speler.logo = this.getLogoNaam(speler.ploeg)
-      }
 
-    })
-  }
-
-  getLogoNaam(ploeg: string): string {
-    switch (ploeg) {
-      case 'Anderlecht':
-        return 'anderlecht.png'
-      case 'Royal Antwerp FC':
-        return 'antwerp.png'
-      case 'Charleroi':
-        return 'charleroi.png'
-      case 'Club Brugge':
-        return 'club.png'
-      case 'Cercle Brugge':
-        return 'cercle.png'
-      case 'Eupen':
-        return 'eupen.png'
-      case 'Genk':
-        return 'genk.png'
-      case 'Gent':
-        return 'gent.png'
-      case 'Mechelen':
-        return 'mechelen.png'
-      case 'OH Leuven':
-        return 'ohleuven.png'
-      case 'Oostende':
-        return 'oostende.png'
-      case 'Standard':
-        return 'standard.png'
-      case 'STVV':
-        return 'stvv.png'
-      case 'Union SG':
-        return 'union.png'
-      case 'Waregem':
-        return 'waregem.png'
-      default:
-        return ''
-    }
-  }
   public isDataLoaded(): boolean {
-    return this.#dataLoaded;
+    return this.#dataLoaded
   }
+
   getPlaceholderSpelers() {
-    const placeholders: ISpeler[]  = [];
-    const posities = ['Doelman', 'Verdediger', 'Middenvelder', 'Aanvaller'];
-    const aantallen = [2, 5, 5, 3]; // Aantal voor elke positie
+    const placeholders: ISpeler[] = []
+    const posities = ['Doelman', 'Verdediger', 'Middenvelder', 'Aanvaller']
+    const aantallen = [2, 5, 5, 3] // Aantal voor elke positie
+    const actieveAantallen = [1, 4, 4, 2]; // Aantal actieve spelers voor elke positie zodat standaard een 442 opstelling wordt gemaakt
 
     posities.forEach((positie, index) => {
       for (let i = 0; i < aantallen[index]; i++) {
+        const isActief = i < actieveAantallen[index]; // Eerste x spelers zijn actief, gebaseerd op actieveAantallen
+        const kapiteinBool = `${positie} ${i + 1}` === 'Aanvaller 1'
+
         placeholders.push({
           id: `ph${i + 1}${index}`,
           naam: `${positie} ${i + 1}`,
-          ploeg: '',
+          ploeg: 'placeholder',
+          logo: 'nee',
           positie: positie,
-          isActief: false,
+          isActief: isActief,
           rugnummer: 0,
-          isKapitein: false,
+          isKapitein: kapiteinBool,
           volgendeMatch: ''
-        });
+        })
       }
-    });
+    })
 
-    return placeholders;
+    return placeholders
   }
 
   async loadSpelersData(): Promise<void> {
     if (!this.#dataLoaded) {
-      this.#spelersData = await firstValueFrom(this.apiService.getSpelers());
-      this.#dataLoaded = true;
+      this.#spelersData = await firstValueFrom(this.apiService.getSpelers())
+      this.#dataLoaded = true
     }
   }
 
   getSpelersData(): ISpelerData[] {
-    return this.#spelersData;
+    return this.#spelersData
   }
 
   private transformToISpeler = (spelerData: ISpelerData): ISpeler => {
     const statisticsindex: number = /*spelerData.statistics.length - 1*/ 0
-    let ratingsnumber: string | number | null= spelerData.statistics[statisticsindex].games.rating
-    if(ratingsnumber !== null){
-      ratingsnumber = parseInt(ratingsnumber)
-    }
-    else{
-      ratingsnumber = 0
-    }
+    let ratingsnumber: string | number | null = spelerData.statistics[statisticsindex].games.rating
+    if (ratingsnumber !== null) {
+      const num = parseFloat(ratingsnumber)
+      if (!Number.isInteger(num)) {
+        ratingsnumber = parseFloat(num.toFixed(1))
+      } else {
+        ratingsnumber = num
+      }
 
-
+    } else {
+      ratingsnumber = 4
+    }
 
 
     return {
@@ -444,7 +443,7 @@ export class SpelersService {
       rugnummer: spelerData.statistics[statisticsindex].games.number,
       isActief: false,
       isKapitein: false,
-      volgendeMatch: "nog doen",
+      volgendeMatch: 'nog doen',
       rating: ratingsnumber,
       logo: spelerData.statistics[statisticsindex].team.logo
     }
@@ -479,7 +478,6 @@ export class SpelersService {
         return ''
     }
   }
-
 
 
 }

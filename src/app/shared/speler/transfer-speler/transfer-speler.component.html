@@ -5,13 +5,16 @@
     </ion-item-option>
   </ion-item-options>-->
 
-  <ion-item [routerLink]="['speler-transfers', speler.id]" button detail="true" lines="full">
-    <img *ngIf="spelersService.spelers.length > 0" [src]="'../../../assets/ploeglogos/' + speler.logo" alt="logo" class="logo"/>
-    {{ speler.naam }}
-    {{ speler.isKapitein ? '(K)' : ''}}
+<ion-item [routerLink]="['speler-transfers', speler.id]" button detail="true" lines="full">
+    <span class="speler-logo-container">
+    <img *ngIf="speler.logo !== 'nee'" [src]="speler.logo" alt="logo" class="logo"/>
+  </span>
+  {{ speler.naam }}
+  <span *ngIf="speler.ploeg !== 'placeholder'" >
+  {{ speler.isKapitein ? '(K)' : '' }}
+</span>
+  <ion-note slot="end">transfer</ion-note>
 
-    <ion-note slot="end">transfer</ion-note>
-
-  </ion-item>
+</ion-item>
 
 <!--</ion-item-sliding>-->

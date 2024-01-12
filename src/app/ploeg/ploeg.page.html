@@ -104,9 +104,15 @@
       <ion-item>Work in progress</ion-item>
     </div>
   </div>
-git 
   <!-- transfer pagina-->
   <div *ngIf="activeTab === 'transfers'">
+
+    <div *ngIf="spelerService.zijnSpelersGewijzigd()" class="ion-margin">
+      <!-- Knoppen om te annuleren en op te slaan -->
+      <ion-button slot="end" (click)="annuleerWijzigingen()" size="small" fill="outline" color="medium">Annuleren</ion-button>
+      <ion-button slot="end" [disabled]="spelerService.heeftPlaceholderSpeler()" (click)="slaWijzigingenOp()" size="small" fill="outline" color="medium">Opslaan</ion-button>
+    </div>
+
 
     <ng-container *ngIf="spelerService.isDataLoaded(); else loading">
       <ion-list>

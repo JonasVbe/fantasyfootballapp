@@ -33,11 +33,9 @@ export class SpelerComponent  implements OnInit {
     this.spelersService.selecteerSpelerVoorWissel(this.speler)
   }
 
+   ngOnInit() {
 
 
-  ngOnInit() {
-
-    this.spelersService.setLogo()
   }
 
 }

@@ -12,12 +12,11 @@
  </ion-item-options>
 
  <ion-item [class.beschikbaar-voor-wissel]="isBeschikbaarVoorWissel" (click)="wisselSpeler()" lines="full">
-  <img [src]="'../../../assets/ploeglogos/' + speler.logo" alt="logo" class="logo"/>
+  <img [src]="speler.logo" alt="logo" class="logo"/>
   {{ speler.naam }}
   {{ speler.isKapitein ? '(K)' : ''}}
-  <div class="item-end">
-   <span class="volgendeMatchInfo">{{speler.volgendeMatch}}</span>
-  </div>
+
+   <ion-note slot="end">{{speler.volgendeMatch}}</ion-note>
   <!--<ion-button slot="end" (click)="openWisselMenu(speler)">Wissel</ion-button>-->
  </ion-item>
 
