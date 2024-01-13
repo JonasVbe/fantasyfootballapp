@@ -17,8 +17,8 @@ const routes: Routes = [
         loadChildren: () => import('../kalender/kalender.module').then(m => m.KalenderPageModule)
       },
       {
-        path: 'statistieken',
-        loadChildren: () => import('../statistieken/statistieken.module').then(m => m.StatistiekenPageModule)
+        path: 'settings',
+        loadChildren: () => import('../settings/settings.module').then(m => m.SettingsPageModule)
       },
       {
         path: '',

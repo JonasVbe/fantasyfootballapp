@@ -1,7 +1,6 @@
 import {inject, Injectable} from '@angular/core'
 import {ISpeler} from '../../models/ISpeler'
 import {ApiFootballService} from './api-football.service'
-import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject'
 import {ISpelerData} from '../../models/ISpelerApiResponse'
 import {firstValueFrom} from 'rxjs'
 
@@ -185,7 +184,8 @@ export class SpelersService {
 
   initialSetSpelersVoorTransfers() {
 
-      if (this.spelers.length === 0) {
+    if(this.spelersVoorTransfers.length === 0)
+      if (this.spelers.length === 0 ) {
         this.spelersVoorTransfers = this.getPlaceholderSpelers()
       } else {
         this.spelersVoorTransfers = this.spelers
@@ -477,6 +477,18 @@ export class SpelersService {
       default:
         return ''
     }
+  }
+
+  createTimestamp():number {
+    const nowUtc = new Date(Date.UTC(
+      new Date().getUTCFullYear(),
+      new Date().getUTCMonth(),
+      new Date().getUTCDate(),
+      new Date().getUTCHours(),
+      new Date().getUTCMinutes(),
+      new Date().getUTCSeconds()
+    ))
+    return nowUtc.getTime()
   }
 
 

@@ -4,6 +4,10 @@ import {User, signInWithCredential, signOut, updateProfile, Auth, GoogleAuthProv
 import {Router} from '@angular/router'
 import {FirebaseAuthentication} from '@capacitor-firebase/authentication'
 import {Capacitor} from '@capacitor/core'
+import {FirestoreService} from './firestore.service'
+import {IGebruiker} from '../../models/IGebruiker'
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,11 +15,16 @@ export class AuthService {
 
   #currentUser: BehaviorSubject<null | User> = new BehaviorSubject<null | User>(null)
   currentUser = this.#currentUser.asObservable()
+  gebruiker: IGebruiker | null = null
 
   #verificationId?: string
 
   #auth = inject(Auth)
   #router = inject(Router)
+  #firestoreService = inject(FirestoreService)
+
+
+
   constructor() {
     this.#auth.onAuthStateChanged(user => this.#setCurrentUser(user))
   }
@@ -32,6 +41,14 @@ export class AuthService {
       const credential = GoogleAuthProvider.credential(idToken)
       await signInWithCredential(this.#auth, credential)
     }
+    /*console.log(this.#currentUser.value)*/
+    const firebaseUser = this.#currentUser.value
+
+     await this.#firestoreService.haalOpOfMaakGebruiker(firebaseUser)
+
+
+
+
   }
 
   async signOut(): Promise<void> {
@@ -40,6 +57,13 @@ export class AuthService {
     if (Capacitor.isNativePlatform()) {
       await signOut(this.#auth)
     }
+  }
+
+  getCurrentUser(): User | null {
+    return this.#currentUser.value
+  }
+  getUserUID(): string | undefined {
+    return this.#currentUser.value?.uid
   }
 
   async updateDisplayName(displayName: string): Promise<void> {

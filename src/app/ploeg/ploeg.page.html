@@ -1,6 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>FC-Placeholder</ion-title>
+    <ng-container *ngIf="gebruiker?.ploeg?.naam === 'Stel een ploegnaam in'else toonTitel">
+      <form [formGroup]="ploegnaamForm" (ngSubmit)="updatePloegnaam()">
+        <ion-input formControlName="ploegnaam" placeholder="Voer ploegnaam in"></ion-input>
+        <ion-button type="submit" [disabled]="!ploegnaamForm.valid">Opslaan</ion-button>
+      </form>
+    </ng-container>
+    <ng-template #toonTitel>
+      <ion-title>{{ gebruiker?.ploeg?.naam || "nog niet" }}</ion-title>
+    </ng-template>
   </ion-toolbar>
 </ion-header>
 
