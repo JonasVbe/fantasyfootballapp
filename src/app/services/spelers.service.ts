@@ -205,6 +205,8 @@ export class SpelersService {
     if (index !== -1) {
       this.spelersVoorTransfers[index] = nieuweSpeler
     }
+    console.log(this.spelersVoorTransfers)
+    console.log(this.origineleSpelersVoorTransfers)
   }
 
   zijnSpelersGewijzigd(): boolean {
