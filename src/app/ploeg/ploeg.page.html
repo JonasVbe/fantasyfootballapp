@@ -47,6 +47,11 @@
       </div>
       <div *ngIf="spelerService.spelers.length > 0">
 
+        <div *ngIf="spelerInfoIsGewijzigd" class="ion-margin">
+
+          <ion-button (click)="bevestigPloegwijziging()" size="small" fill="outline" color="medium">Opslaan</ion-button>
+        </div>
+
         <ion-list>
           <ion-item-group>
             <ion-item-divider color="light">

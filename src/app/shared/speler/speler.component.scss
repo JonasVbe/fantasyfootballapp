@@ -10,9 +10,21 @@
   flex-grow: 1;
 }
 
-.logo {
-  margin-right: 10px;
-}
+
 .beschikbaar-voor-wissel {
   --ion-item-background: #1b603b; /* Pas deze kleur aan naar wens */
+}
+.logo {
+  margin-right: 10px;
+  max-height: 100%;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+.speler-logo-container {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

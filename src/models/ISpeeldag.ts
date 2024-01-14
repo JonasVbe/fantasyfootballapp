@@ -1,7 +1,8 @@
 import { ISpeler } from "./ISpeler";
 
 export interface ISpeeldag{
-    timestamp: number
+    timestampTransfer: number
+    timestampChange: number
     spelers: ISpeler[]
 
 }

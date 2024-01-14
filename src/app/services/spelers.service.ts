@@ -3,6 +3,7 @@ import {ISpeler} from '../../models/ISpeler'
 import {ApiFootballService} from './api-football.service'
 import {ISpelerData} from '../../models/ISpelerApiResponse'
 import {firstValueFrom} from 'rxjs'
+import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject'
 
 
 @Injectable({
@@ -10,7 +11,7 @@ import {firstValueFrom} from 'rxjs'
 })
 export class SpelersService {
   apiService = inject(ApiFootballService)
-
+  #spelerInfoGewijzigdSubject = new BehaviorSubject<boolean>(false)
   spelers: ISpeler[] = []
 
   geselecteerdeSpelerVoorWissel: ISpeler | null = null
@@ -18,6 +19,7 @@ export class SpelersService {
 
 
   spelersVoorTransfers: ISpeler[] = []
+  origineSpelers: ISpeler[] = []
   geselecteerdeSpelerVoorTransfer: ISpeler | undefined = undefined
   origineleSpelersVoorTransfers: ISpeler[] = []
 
@@ -25,188 +27,36 @@ export class SpelersService {
   #dataLoaded = false
 
 
-  constructor() {
-
-
-    /*this.spelers = [
-      {
-        id: 'blabla1',
-        naam: 'Simon Mignolet',
-        ploeg: 'Club Brugge',
-        positie: 'Doelman',
-        rugnummer: 1,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Mechelen'
-      },
-      {
-        id: 'blabla2',
-        naam: 'Hervé Koffi',
-        ploeg: 'Charleroi',
-        positie: 'Doelman',
-        rugnummer: 1,
-        isActief: false,
-        isKapitein: false,
-        volgendeMatch: 'Speelt thuis tegen Union SG'
-      },
-      {
-        id: 'bla1',
-        naam: 'Toby Alderweireld',
-        ploeg: 'Royal Antwerp FC',
-        positie: 'Verdediger',
-        rugnummer: 1,
-        isActief: true,
-        isKapitein: true,
-        volgendeMatch: 'Speelt uit tegen Cercle Brugge'
-      },
-      {
-        id: 'bla2',
-        naam: 'Jesper Daland',
-        ploeg: 'Cercle Brugge',
-        positie: 'Verdediger',
-        rugnummer: 5,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt thuis tegen Antwerp'
-      },
-      {
-        id: 'bla3',
-        naam: 'Christian Burgess',
-        ploeg: 'Union SG',
-        positie: 'Verdediger',
-        rugnummer: 5,
-        isActief: false,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Charleroi'
-      },
-      {
-        id: 'bla4',
-        naam: 'Maxim De Cuyper',
-        ploeg: 'Club Brugge',
-        positie: 'Verdediger',
-        rugnummer: 7,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Mechelen'
-      },
-      {
-        id: 'bla5',
-        naam: 'Daniel Munoz',
-        ploeg: 'Genk',
-        positie: 'Verdediger',
-        rugnummer: 3,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Eupen'
-      },
-      {
-        id: 'bl1',
-        naam: 'William Balikwisha',
-        ploeg: 'Royal Antwerp FC',
-        positie: 'Middenvelder',
-        rugnummer: 8,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Cercle Brugge'
-      },
-      {
-        id: 'bl2',
-        naam: 'Thorgan Hazard',
-        ploeg: 'Anderlecht',
-        positie: 'Middenvelder',
-        rugnummer: 8,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt thuis tegen Standard'
-      },
-      {
-        id: 'bl3',
-        naam: 'Patrik Hrosovsky',
-        ploeg: 'Genk',
-        positie: 'Middenvelder',
-        rugnummer: 8,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Eupen'
-      },
-      {
-        id: 'bl4',
-        naam: 'Sven Kums',
-        ploeg: 'Gent',
-        positie: 'Middenvelder',
-        rugnummer: 8,
-        isActief: false,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Cercle Brugge'
-      },
-      {
-        id: 'bl5',
-        naam: 'Hans Vanaken',
-        ploeg: 'Club Brugge',
-        positie: 'Middenvelder',
-        rugnummer: 8,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Mechelen'
-      },
-      {
-        id: 'b1',
-        naam: 'Gift Orban',
-        ploeg: 'Gent',
-        positie: 'Aanvaller',
-        isActief: true,
-        rugnummer: 8,
-        isKapitein: false,
-        volgendeMatch: 'Speelt thuis tegen RWDM'
-      },
-      {
-        id: 'b2',
-        naam: 'Vincent Janssen',
-        ploeg: 'Royal Antwerp FC',
-        positie: 'Aanvaller',
-        rugnummer: 8,
-        isActief: true,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Cercle Brugge'
-      },
-      {
-        id: 'b3',
-        naam: 'Noah Ohio',
-        ploeg: 'Standard',
-        positie: 'Aanvaller',
-        rugnummer: 8,
-        isActief: false,
-        isKapitein: false,
-        volgendeMatch: 'Speelt uit tegen Anderlecht'
-      },
-    ]*/
-  }
+  constructor() {}
 
   initialSetSpelersVoorTransfers() {
 
-    if(this.spelersVoorTransfers.length === 0)
-      if (this.spelers.length === 0 ) {
+    if (this.spelersVoorTransfers.length === 0) {
+
+      if (this.spelers.length === 0) {
         this.spelersVoorTransfers = this.getPlaceholderSpelers()
       } else {
         this.spelersVoorTransfers = this.spelers
       }
-    this.origineleSpelersVoorTransfers = [...this.spelersVoorTransfers];
+      console.log('set it')
+      this.origineleSpelersVoorTransfers = [...this.spelersVoorTransfers]
+    }
   }
+
   voerTransferUit(nieuweSpeler: ISpeler) {
 
-    if(this.geselecteerdeSpelerVoorTransfer?.isKapitein){
+    if (this.geselecteerdeSpelerVoorTransfer?.isKapitein) {
       nieuweSpeler.isKapitein = true
     }
-    if(this.geselecteerdeSpelerVoorTransfer?.isActief){
+    if (this.geselecteerdeSpelerVoorTransfer?.isActief) {
       nieuweSpeler.isActief = true
     }
 
-    const index = this.spelersVoorTransfers.findIndex(speler => speler.id === this.geselecteerdeSpelerVoorTransfer?.id);
+    const index = this.spelersVoorTransfers.findIndex(speler => speler.id === this.geselecteerdeSpelerVoorTransfer?.id)
     if (index !== -1) {
       this.spelersVoorTransfers[index] = nieuweSpeler
     }
-    console.log(this.spelersVoorTransfers)
-    console.log(this.origineleSpelersVoorTransfers)
+
   }
 
   zijnSpelersGewijzigd(): boolean {
@@ -235,8 +85,9 @@ export class SpelersService {
 
 
   }
+
   heeftPlaceholderSpeler(): boolean {
-    return this.spelersVoorTransfers.some(speler => speler.ploeg === 'placeholder');
+    return this.spelersVoorTransfers.some(speler => speler.ploeg === 'placeholder')
   }
 
   get doelmannen(): ISpeler[] {
@@ -289,6 +140,12 @@ export class SpelersService {
     this.beschikbareWisselspelers = this.getBeschikbareSpelersOmTeWisselen(speler)
 
   }
+
+  resetSpelersVoorWissel() {
+    this.geselecteerdeSpelerVoorWissel = null
+    this.beschikbareWisselspelers = []
+  }
+
 
   isSpelerBeschikbaarVoorWissel(speler: ISpeler): boolean {
     return this.beschikbareWisselspelers.includes(speler)
@@ -343,8 +200,26 @@ export class SpelersService {
     return wisselopties
   }
 
+  isSpelersArrayAangepast(): boolean {
+    if (this.origineSpelers.length === 0) {
+      return false;
+    }
 
-  wisselSpeler(spelerUit: ISpeler, spelerIn: ISpeler) {
+    for (const origineleSpeler of this.origineSpelers) {
+      const overeenkomendeNieuweSpeler = this.spelers.find(speler => speler.id === origineleSpeler.id);
+
+      if (!overeenkomendeNieuweSpeler) {
+        return true;
+      }
+
+      if (origineleSpeler.isKapitein !== overeenkomendeNieuweSpeler.isKapitein || origineleSpeler.isActief !== overeenkomendeNieuweSpeler.isActief) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+  wisselSpeler(spelerUit: ISpeler, spelerIn: ISpeler): void {
     if (!spelerUit || !spelerIn) {
       console.log('Geen spelers geselecteerd')
       return
@@ -355,12 +230,17 @@ export class SpelersService {
       spelerIn.isKapitein = true
     }
 
+    if (spelerIn.isKapitein) {
+      spelerUit.isKapitein = true
+      spelerIn.isKapitein = false
+    }
+
     spelerUit.isActief = !spelerUit.isActief
     spelerIn.isActief = !spelerIn.isActief
-
+    this.#spelerInfoGewijzigdSubject.next(true)
   }
 
-  maakKapitein(geselecteerdeSpeler: ISpeler) {
+  maakKapitein(geselecteerdeSpeler: ISpeler): void {
     if (!geselecteerdeSpeler) {
       console.log('Geen speler geselecteerd')
       return
@@ -371,8 +251,15 @@ export class SpelersService {
     if (spelerOmKapiteinTeMaken) {
       spelerOmKapiteinTeMaken.isKapitein = true
     }
+    this.#spelerInfoGewijzigdSubject.next(true)
   }
 
+  get spelerInfoGewijzigd() {
+    return this.#spelerInfoGewijzigdSubject.asObservable()
+  }
+  resetSpelerInfoGewijzigd() {
+    this.#spelerInfoGewijzigdSubject.next(false)
+  }
 
   public isDataLoaded(): boolean {
     return this.#dataLoaded
@@ -382,11 +269,11 @@ export class SpelersService {
     const placeholders: ISpeler[] = []
     const posities = ['Doelman', 'Verdediger', 'Middenvelder', 'Aanvaller']
     const aantallen = [2, 5, 5, 3] // Aantal voor elke positie
-    const actieveAantallen = [1, 4, 4, 2]; // Aantal actieve spelers voor elke positie zodat standaard een 442 opstelling wordt gemaakt
+    const actieveAantallen = [1, 4, 4, 2] // Aantal actieve spelers voor elke positie zodat standaard een 442 opstelling wordt gemaakt
 
     posities.forEach((positie, index) => {
       for (let i = 0; i < aantallen[index]; i++) {
-        const isActief = i < actieveAantallen[index]; // Eerste x spelers zijn actief, gebaseerd op actieveAantallen
+        const isActief = i < actieveAantallen[index] // Eerste x spelers zijn actief, gebaseerd op actieveAantallen
         const kapiteinBool = `${positie} ${i + 1}` === 'Aanvaller 1'
 
         placeholders.push({
@@ -481,7 +368,7 @@ export class SpelersService {
     }
   }
 
-  createTimestamp():number {
+  createTimestamp(): number {
     const nowUtc = new Date(Date.UTC(
       new Date().getUTCFullYear(),
       new Date().getUTCMonth(),

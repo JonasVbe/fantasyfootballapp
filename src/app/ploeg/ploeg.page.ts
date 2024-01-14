@@ -15,16 +15,23 @@ import {ISpeeldag} from '../../models/ISpeeldag'
   templateUrl: './ploeg.page.html',
   styleUrls: ['./ploeg.page.scss'],
 })
-export class PloegPage implements OnInit {
-  #gebruikerService = inject(GebruikerService)
+export class PloegPage {
+  #gebruikerService: GebruikerService = inject(GebruikerService)
   #gebruikerSub: Subscription | null = null
+  #spelerInfoGewijzigdSub: Subscription | null = null
+  spelerInfoIsGewijzigd: boolean = false
   gebruiker: IGebruiker | null = null
-  activeTab = 'mijnploeg'
-  spelerService = inject(SpelersService)
+  activeTab:string = 'mijnploeg'
+  spelerGewisseld: boolean = false
+  spelerService: SpelersService = inject(SpelersService)
   ploegnaamForm: FormGroup = new FormGroup({})
 
-  #firestoreService = inject(FirestoreService)
-  #AuthService = inject(AuthService)
+
+
+
+  #firestoreService: FirestoreService = inject(FirestoreService)
+  #AuthService: AuthService = inject(AuthService)
+
 
   get tabNaam() {
     return this.spelerService.spelers.length === 0 ? 'Koop Spelers' : 'Transfers'
@@ -36,6 +43,8 @@ export class PloegPage implements OnInit {
 
   annuleerWijzigingen() {
     // Zet de spelersVoorTransfers terug naar de originele staat
+    console.log(this.spelerService.spelersVoorTransfers)
+    console.log(this.spelerService.origineleSpelersVoorTransfers)
     this.spelerService.spelersVoorTransfers = [...this.spelerService.origineleSpelersVoorTransfers]
   }
 
@@ -46,20 +55,33 @@ export class PloegPage implements OnInit {
     this.spelerService.spelers = [...this.spelerService.spelersVoorTransfers]
     const utcTimestamp = this.spelerService.createTimestamp()
     const speeldag: ISpeeldag = {
-      timestamp: utcTimestamp,
+      timestampTransfer: utcTimestamp,
+      timestampChange: utcTimestamp,
       spelers: [...this.spelerService.spelers]
     }
     this.gebruiker?.ploeg.speeldagen.push(speeldag)
    await this.#firestoreService.updateGebruikerZonderControle(this.gebruiker!)
-
-
-
   }
 
-  ngOnInit() {
-    console.log('ngOnInit ploeg')
+  bevestigPloegwijziging() {
+    if (this.gebruiker) {
+      const utcTimestampTransfer = this.gebruiker?.ploeg.speeldagen[this.gebruiker.ploeg.speeldagen.length - 1].timestampTransfer
+      const utcTimestamp = this.spelerService.createTimestamp()
+      const speeldag: ISpeeldag = {
+        timestampTransfer: utcTimestampTransfer,
+        timestampChange: utcTimestamp,
+        spelers: [...this.spelerService.spelers]
+      }
+      this.gebruiker?.ploeg.speeldagen.push(speeldag)
+    }
 
+    this.#firestoreService.updateGebruikerZonderControle(this.gebruiker!).then(() => {
+      console.log('gebruiker geupdate')
+      this.spelerService.resetSpelerInfoGewijzigd()
+    })
   }
+
+
   ionViewWillEnter() {
     console.log('ionViewWillEnter ploeg')
 
@@ -73,7 +95,12 @@ export class PloegPage implements OnInit {
         ploegnaam: this.gebruiker.ploeg.naam
       })
     }
-    this.spelerService.initialSetSpelersVoorTransfers()
+    this.#spelerInfoGewijzigdSub = this.spelerService.spelerInfoGewijzigd.subscribe((isGewijzigd) => {
+      this.spelerInfoIsGewijzigd = isGewijzigd;
+    });
+
+
+
   }
 
   async setSpelersData(): Promise<void> {
@@ -94,7 +121,7 @@ export class PloegPage implements OnInit {
     }
 
 
-
+    this.spelerService.initialSetSpelersVoorTransfers()
 
 
 
@@ -121,10 +148,17 @@ export class PloegPage implements OnInit {
 
 
 
+
   ionViewDidLeave() {
     if (this.#gebruikerSub) {
       this.#gebruikerSub.unsubscribe()
     }
+    if (this.#spelerInfoGewijzigdSub) {
+      this.#spelerInfoGewijzigdSub.unsubscribe()
+    }
+
   }
+
+
 
 }

@@ -3,19 +3,19 @@ import {SpelersService} from '../../services/spelers.service'
 import {ISpeler} from '../../../models/ISpeler'
 
 
-
-
 @Component({
   selector: 'app-speler',
   templateUrl: './speler.component.html',
   styleUrls: ['./speler.component.scss'],
 })
-export class SpelerComponent  implements OnInit {
+export class SpelerComponent implements OnInit {
 
   @Input({required: true}) speler!: ISpeler
-  spelersService = inject(SpelersService)
+  spelersService: SpelersService = inject(SpelersService)
+  transferActief: boolean = false
 
-  constructor() { }
+  constructor() {
+  }
 
   get isBeschikbaarVoorWissel(): boolean {
     return this.spelersService.isSpelerBeschikbaarVoorWissel(this.speler)
@@ -29,11 +29,20 @@ export class SpelerComponent  implements OnInit {
   }
 
   wisselKnopGeklikt() {
-    console.log("wisselknop")
-    this.spelersService.selecteerSpelerVoorWissel(this.speler)
+    if (!this.transferActief) {
+      this.transferActief = true
+      this.spelersService.selecteerSpelerVoorWissel(this.speler)
+      return
+    }
+    if (this.transferActief) {
+      this.transferActief = false
+      this.spelersService.resetSpelersVoorWissel()
+      return
+    }
+
   }
 
-   ngOnInit() {
+  ngOnInit() {
 
 
   }
