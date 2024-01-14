@@ -17,6 +17,12 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ng-container *ngIf="isLoading; else content">
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  </ng-container>
+  <ng-template #content>
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -40,5 +46,5 @@
     <app-wedstrijd [wedstrijd]="wedstrijd"></app-wedstrijd>
   </div>
 
-
+  </ng-template>
 </ion-content>
