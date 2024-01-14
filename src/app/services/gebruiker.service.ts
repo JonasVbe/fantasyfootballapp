@@ -16,7 +16,9 @@ export class GebruikerService {
 
    setGebruiker(gebruiker: IGebruiker) {
      this.#gebruikerSubject.next(gebruiker)
-
+  }
+  resetGebruiker() {
+    this.#gebruikerSubject.next(null)
   }
 
   getHuidigeGebruiker(): IGebruiker | null {

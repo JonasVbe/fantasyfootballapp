@@ -5,6 +5,8 @@ import {Router} from '@angular/router'
 import {FirebaseAuthentication} from '@capacitor-firebase/authentication'
 import {Capacitor} from '@capacitor/core'
 import {FirestoreService} from './firestore.service'
+import {SpelersService} from './spelers.service'
+import {GebruikerService} from './gebruiker.service'
 import {IGebruiker} from '../../models/IGebruiker'
 
 
@@ -22,6 +24,8 @@ export class AuthService {
   #auth = inject(Auth)
   #router = inject(Router)
   #firestoreService = inject(FirestoreService)
+  #spelersService = inject(SpelersService)
+  #gebruikerService = inject(GebruikerService)
 
 
 
@@ -71,6 +75,11 @@ export class AuthService {
     if (Capacitor.isNativePlatform()) {
       await signOut(this.#auth)
     }
+
+
+    this.#spelersService.spelers = []
+    this.#gebruikerService.resetGebruiker()
+
   }
 
   getCurrentUser(): User | null {
