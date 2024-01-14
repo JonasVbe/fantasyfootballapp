@@ -4,4 +4,8 @@
     <string name="title_activity_main">FantasyFootball</string>
     <string name="package_name">be.vanberlo.jonas.fantasyfootball</string>
     <string name="custom_url_scheme">be.vanberlo.jonas.fantasyfootball</string>
+    <string name="facebook_app_id">679731681014241</string>
+    <string name="fb_login_protocol_scheme">fb679731681014241</string>
+    <string name="facebook_client_token">4a1702c5ff8ee5eaad2cd001fe9c9f71</string>
+
 </resources>

@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core'
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject'
-import {User, signInWithCredential, signOut, updateProfile, Auth, GoogleAuthProvider} from '@angular/fire/auth'
+import {User, signInWithCredential, signOut, updateProfile, Auth, GoogleAuthProvider, FacebookAuthProvider} from '@angular/fire/auth'
 import {Router} from '@angular/router'
 import {FirebaseAuthentication} from '@capacitor-firebase/authentication'
 import {Capacitor} from '@capacitor/core'
@@ -45,10 +45,24 @@ export class AuthService {
     const firebaseUser = this.#currentUser.value
 
      await this.#firestoreService.haalOpOfMaakGebruiker(firebaseUser)
+  }
+  async signInWithFacebook(): Promise<void> {
+    // Sign in on the native layer.
+    const authResult = await FirebaseAuthentication.signInWithFacebook();
+    const idToken = authResult?.credential?.idToken;
 
+    if (!idToken) {
+      throw new Error('Authentication did not succeed, please try again.');
+    }
 
+    // Sign in on the web layer.
+    if (Capacitor.isNativePlatform()) {
+      const credential = FacebookAuthProvider.credential(idToken);
+      await signInWithCredential(this.#auth, credential);
+    }
 
-
+    const firebaseUser = this.#currentUser.value;
+    await this.#firestoreService.haalOpOfMaakGebruiker(firebaseUser);
   }
 
   async signOut(): Promise<void> {
