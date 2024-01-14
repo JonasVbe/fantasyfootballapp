@@ -1,0 +1,30 @@
+.team-info {
+  display: flex;
+  justify-content: space-around; 
+  align-items: center;
+  text-align: center;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-basis: 30%;
+}
+
+.team-logo {
+  width: 40px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.team-name {
+  font-size: smaller;
+}
+
+.vs {
+  font-size: large;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+}

@@ -1,6 +1,16 @@
 <ion-card>
   <ion-card-header>
-    <ion-card-title>{{ wedstrijd.thuisploeg }} vs {{ wedstrijd.uitploeg }}</ion-card-title>
+    <div class="team-info">
+      <div class="team">
+        <img [src]="wedstrijd.thuisploegLogo" alt="{{ wedstrijd.thuisploeg }}" class="team-logo"/>
+        <div class="team-name">{{ wedstrijd.thuisploeg }}</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="team">
+        <img [src]="wedstrijd.uitploegLogo" alt="{{ wedstrijd.uitploeg }}" class="team-logo"/>
+        <div class="team-name">{{ wedstrijd.uitploeg }}</div>
+      </div>
+    </div>
     <ion-card-subtitle>{{ wedstrijd.datum }}</ion-card-subtitle>
   </ion-card-header>
 
@@ -11,7 +21,7 @@
       <ion-chip color="secondary">{{ wedstrijd.uitScore }}</ion-chip>
     </div>
     <ng-template #upcomingMatch>
-      <ion-label>Wedstrijd begint om {{ wedstrijd.uur }}</ion-label>
+      <ion-label>Wedstrijd begint om {{ formatTijd(wedstrijd.uur) }}</ion-label>
     </ng-template>
   </ion-card-content>
 </ion-card>

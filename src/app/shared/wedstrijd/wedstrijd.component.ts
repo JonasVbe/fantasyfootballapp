@@ -6,12 +6,18 @@ import {IWedstrijd} from '../../../models/IWedstrijd'
   templateUrl: './wedstrijd.component.html',
   styleUrls: ['./wedstrijd.component.scss'],
 })
-export class WedstrijdComponent  implements OnInit {
+export class WedstrijdComponent {
 
   @Input({required: true}) wedstrijd!: IWedstrijd
 
-  constructor() { }
+  constructor() {
+  }
 
-  ngOnInit() {}
+  formatTijd(tijd: string | undefined): string | undefined{
+    if (!tijd) return undefined
 
+    return tijd.substring(0, 5)
+  }
 }
+
+
