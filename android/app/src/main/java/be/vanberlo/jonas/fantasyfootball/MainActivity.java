@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package be.vanberlo.jonas.fantasyfootball;
 
 import com.getcapacitor.BridgeActivity;
 

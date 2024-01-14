@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:295838732722:android:117ec173edc5269e3094ab",
         "android_client_info": {
-          "package_name": "io.ionic.starter"
+          "package_name": "be.vanberlo.jonas.fantasyfootball"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "295838732722-omk6libn9ll98j8cpq99ph6m046fl2je.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "io.ionic.starter",
+            "package_name": "be.vanberlo.jonas.fantasyfootball",
             "certificate_hash": "612ff37afb13f01dd740fcb5ffe2e690799e9694"
           }
         },
