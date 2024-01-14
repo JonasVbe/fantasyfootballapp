@@ -85,7 +85,7 @@ export class FirestoreService {
       //maak een nieuwe ploeg aan
       const nieuwePloeg: IPloeg = {
         naam: 'Stel een ploegnaam in',
-        speeldagen: []
+        teamSelecties: []
       }
 
       // Maak een nieuwe gebruiker aan
@@ -111,12 +111,12 @@ export class FirestoreService {
       huidigeGebruiker.ploeg.naam !== nieuweGebruiker.ploeg.naam) {
       return true
     }
-    if (huidigeGebruiker.ploeg.speeldagen[huidigeGebruiker.ploeg.speeldagen.length - 1]
-      !== nieuweGebruiker.ploeg.speeldagen[huidigeGebruiker.ploeg.speeldagen.length - 1]){
+    if (huidigeGebruiker.ploeg.teamSelecties[huidigeGebruiker.ploeg.teamSelecties.length - 1]
+      !== nieuweGebruiker.ploeg.teamSelecties[huidigeGebruiker.ploeg.teamSelecties.length - 1]){
       return true
     }
 
-    return huidigeGebruiker.ploeg.speeldagen.length !== nieuweGebruiker.ploeg.speeldagen.length
+    return huidigeGebruiker.ploeg.teamSelecties.length !== nieuweGebruiker.ploeg.teamSelecties.length
 
   }
 

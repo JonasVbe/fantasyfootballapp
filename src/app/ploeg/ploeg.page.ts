@@ -8,7 +8,9 @@ import {Subscription} from 'rxjs'
 import {IGebruiker} from '../../models/IGebruiker'
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {AuthService} from '../services/auth.service'
-import {ISpeeldag} from '../../models/ISpeeldag'
+import {ITeamSelectie} from '../../models/ITeamSelectie'
+import {ApiFootballService} from '../services/api-football.service'
+import {WedstrijdenService} from '../services/wedstrijden.service'
 
 @Component({
   selector: 'app-ploeg',
@@ -17,16 +19,17 @@ import {ISpeeldag} from '../../models/ISpeeldag'
 })
 export class PloegPage {
   #gebruikerService: GebruikerService = inject(GebruikerService)
+  #apiFootballService = inject(ApiFootballService)
+  #wedstrijdService = inject(WedstrijdenService)
   #gebruikerSub: Subscription | null = null
+  #WedstrijdSub: Subscription | null = null
   #spelerInfoGewijzigdSub: Subscription | null = null
   spelerInfoIsGewijzigd: boolean = false
   gebruiker: IGebruiker | null = null
-  activeTab:string = 'mijnploeg'
-  spelerGewisseld: boolean = false
+  activeTab: string = 'mijnploeg'
   spelerService: SpelersService = inject(SpelersService)
   ploegnaamForm: FormGroup = new FormGroup({})
-
-
+  wedstrijdenVanSpeeldag: IWedstrijd[] = []
 
 
   #firestoreService: FirestoreService = inject(FirestoreService)
@@ -54,25 +57,25 @@ export class PloegPage {
     // Update het huidige team naar de huidige staat
     this.spelerService.spelers = [...this.spelerService.spelersVoorTransfers]
     const utcTimestamp = this.spelerService.createTimestamp()
-    const speeldag: ISpeeldag = {
+    const speeldag: ITeamSelectie = {
       timestampTransfer: utcTimestamp,
       timestampChange: utcTimestamp,
       spelers: [...this.spelerService.spelers]
     }
-    this.gebruiker?.ploeg.speeldagen.push(speeldag)
-   await this.#firestoreService.updateGebruikerZonderControle(this.gebruiker!)
+    this.gebruiker?.ploeg.teamSelecties.push(speeldag)
+    await this.#firestoreService.updateGebruikerZonderControle(this.gebruiker!)
   }
 
   bevestigPloegwijziging() {
     if (this.gebruiker) {
-      const utcTimestampTransfer = this.gebruiker?.ploeg.speeldagen[this.gebruiker.ploeg.speeldagen.length - 1].timestampTransfer
+      const utcTimestampTransfer = this.gebruiker?.ploeg.teamSelecties[this.gebruiker.ploeg.teamSelecties.length - 1].timestampTransfer
       const utcTimestamp = this.spelerService.createTimestamp()
-      const speeldag: ISpeeldag = {
+      const speeldag: ITeamSelectie = {
         timestampTransfer: utcTimestampTransfer,
         timestampChange: utcTimestamp,
         spelers: [...this.spelerService.spelers]
       }
-      this.gebruiker?.ploeg.speeldagen.push(speeldag)
+      this.gebruiker?.ploeg.teamSelecties.push(speeldag)
     }
 
     this.#firestoreService.updateGebruikerZonderControle(this.gebruiker!).then(() => {
@@ -81,11 +84,24 @@ export class PloegPage {
     })
   }
 
+  laadWedstrijden(speeldag: number): void {
+    this.#WedstrijdSub = this.#apiFootballService.haalWedstrijdenOp(speeldag).subscribe({
+      next: (data) => {
+        this.wedstrijdenVanSpeeldag = data
+      },
+      error: (error) => {
+        console.error('Fout bij het laden van wedstrijden van speeldag in ploegpage', error)
+      }
+    })
+  }
+
 
   ionViewWillEnter() {
     console.log('ionViewWillEnter ploeg')
 
-    this.setSpelersData().then(() => {console.log('spelersdata set')})
+    this.setSpelersData().then(() => {
+      console.log('spelersdata set')
+    })
     this.ploegnaamForm = new FormGroup({
       ploegnaam: new FormControl('', Validators.required)
     })
@@ -96,10 +112,10 @@ export class PloegPage {
       })
     }
     this.#spelerInfoGewijzigdSub = this.spelerService.spelerInfoGewijzigd.subscribe((isGewijzigd) => {
-      this.spelerInfoIsGewijzigd = isGewijzigd;
-    });
+      this.spelerInfoIsGewijzigd = isGewijzigd
+    })
 
-
+    this.laadWedstrijden(this.#wedstrijdService.huidigeSpeeldag)
 
   }
 
@@ -111,18 +127,17 @@ export class PloegPage {
         this.gebruiker = data
       }
     )
-    if(this.gebruiker == null){
+    if (this.gebruiker == null) {
       await this.#firestoreService.haalGebruikerOp(this.#AuthService.getUserUID()!)
       this.gebruiker = data
     }
 
-    if (this.gebruiker !== null && this.gebruiker.ploeg.speeldagen.length > 0) {
-      this.spelerService.spelers = this.gebruiker.ploeg.speeldagen[this.gebruiker.ploeg.speeldagen.length - 1].spelers
+    if (this.gebruiker !== null && this.gebruiker.ploeg.teamSelecties.length > 0) {
+      this.spelerService.spelers = this.gebruiker.ploeg.teamSelecties[this.gebruiker.ploeg.teamSelecties.length - 1].spelers
     }
 
 
     this.spelerService.initialSetSpelersVoorTransfers()
-
 
 
   }
@@ -146,9 +161,6 @@ export class PloegPage {
   }
 
 
-
-
-
   ionViewDidLeave() {
     if (this.#gebruikerSub) {
       this.#gebruikerSub.unsubscribe()
@@ -157,8 +169,11 @@ export class PloegPage {
       this.#spelerInfoGewijzigdSub.unsubscribe()
     }
 
-  }
+    if(this.#gebruikerSub){
+      this.#gebruikerSub.unsubscribe()
+    }
 
+  }
 
 
 }

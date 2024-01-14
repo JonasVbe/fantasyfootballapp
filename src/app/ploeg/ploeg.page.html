@@ -58,7 +58,7 @@
               <ion-label>Doelman</ion-label>
             </ion-item-divider>
 
-            <app-speler *ngIf="spelerService.actieveDoelman" [speler]="spelerService.actieveDoelman"></app-speler>
+            <app-speler *ngIf="spelerService.actieveDoelman" [speler]="spelerService.actieveDoelman" [wedstrijden]="wedstrijdenVanSpeeldag"></app-speler>
 
           </ion-item-group>
 
@@ -68,7 +68,7 @@
               <ion-label>Verdedigers</ion-label>
             </ion-item-divider>
 
-            <app-speler *ngFor="let speler of spelerService.actieveVerdedigers" [speler]="speler"></app-speler>
+            <app-speler *ngFor="let speler of spelerService.actieveVerdedigers" [speler]="speler" [wedstrijden]="wedstrijdenVanSpeeldag"></app-speler>
 
 
           </ion-item-group>
@@ -77,7 +77,7 @@
             <ion-item-divider color="light">
               <ion-label>MiddenVelders</ion-label>
             </ion-item-divider>
-            <app-speler *ngFor="let speler of spelerService.actieveMiddenvelders" [speler]="speler"/>
+            <app-speler *ngFor="let speler of spelerService.actieveMiddenvelders" [speler]="speler" [wedstrijden]="wedstrijdenVanSpeeldag"/>
 
           </ion-item-group>
 
@@ -85,7 +85,7 @@
             <ion-item-divider color="light">
               <ion-label>{{ spelerService.actieveAanvallers.length === 1 ? 'Aanvaller' : 'Aanvallers' }}</ion-label>
             </ion-item-divider>
-            <app-speler *ngFor="let speler of spelerService.actieveAanvallers" [speler]="speler"/>
+            <app-speler *ngFor="let speler of spelerService.actieveAanvallers" [speler]="speler" [wedstrijden]="wedstrijdenVanSpeeldag"/>
           </ion-item-group>
 
 
@@ -95,14 +95,14 @@
             <ion-item-divider color="light">
               <ion-label>Reserve Doelman</ion-label>
             </ion-item-divider>
-            <app-speler *ngIf="spelerService.reserveDoelman" [speler]="spelerService.reserveDoelman"></app-speler>
+            <app-speler *ngIf="spelerService.reserveDoelman" [speler]="spelerService.reserveDoelman" [wedstrijden]="wedstrijdenVanSpeeldag"></app-speler>
           </ion-item-group>
 
           <ion-item-group>
             <ion-item-divider color="light">
               <ion-label>Wissel Spelers</ion-label>
             </ion-item-divider>
-            <app-speler *ngFor="let speler of spelerService.reserveSpelers" [speler]="speler"></app-speler>
+            <app-speler *ngFor="let speler of spelerService.reserveSpelers" [speler]="speler" [wedstrijden]="wedstrijdenVanSpeeldag"></app-speler>
           </ion-item-group>
         </ion-list>
       </div>

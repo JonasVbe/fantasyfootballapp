@@ -1,6 +1,6 @@
 import { ISpeler } from "./ISpeler";
 
-export interface ISpeeldag{
+export interface ITeamSelectie {
     timestampTransfer: number
     timestampChange: number
     spelers: ISpeler[]

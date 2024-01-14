@@ -10,10 +10,10 @@ export interface IFixtureResponse {
     current: number;
     total: number;
   };
-  response: Fixture[];
+  response: IFixture[];
 }
 
-export interface Fixture {
+export interface IFixture {
   fixture: {
     id: number;
     referee: string;
@@ -45,8 +45,8 @@ export interface Fixture {
     round: string;
   };
   teams: {
-    home: Team;
-    away: Team;
+    home: ITeam;
+    away: ITeam;
   };
   goals: {
     home: number;
@@ -72,7 +72,7 @@ export interface Fixture {
   };
 }
 
-export interface Team {
+export interface ITeam {
   id: number;
   name: string;
   logo: string;

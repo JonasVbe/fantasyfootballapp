@@ -1,7 +1,7 @@
-import {ISpeeldag} from './ISpeeldag'
+import {ITeamSelectie} from './ITeamSelectie'
 export interface IPloeg{
     naam: string
-    speeldagen: ISpeeldag[]
+    teamSelecties: ITeamSelectie[]
 
 
 }

@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core'
+import {WedstrijdenService} from '../services/wedstrijden.service'
 import {IWedstrijd} from '../../models/IWedstrijd'
+import {ApiFootballService} from '../services/api-football.service'
+import {Subscription} from 'rxjs'
 
 @Component({
   selector: 'app-kalender',
@@ -8,11 +11,15 @@ import {IWedstrijd} from '../../models/IWedstrijd'
 })
 export class KalenderPage implements OnInit {
 
+  #wedstrijdenService = inject(WedstrijdenService)
+  #apiFootballService = inject(ApiFootballService)
+  #WedstrijdSub: Subscription | null = null
   wedstrijden: IWedstrijd[] = []
-
+  isLoading = true
+  huidigeSpeeldag:number = 0
 
   constructor() {
-    this.wedstrijden = [
+   /* this.wedstrijden = [
       {
         id: '1',
         thuisploeg: 'Westerlo',
@@ -94,10 +101,58 @@ export class KalenderPage implements OnInit {
         uur: '19:15'
       },
 
-    ]
+    ]*/
+  }
+  veranderSpeeldag(richting: number): void {
+
+    this.huidigeSpeeldag += richting
+
+    // Controleer grenzen
+    if (this.huidigeSpeeldag < 1) {
+      this.huidigeSpeeldag = 1
+    } else if (this.huidigeSpeeldag > this.#wedstrijdenService.speeldagen.length) {
+      this.huidigeSpeeldag = this.#wedstrijdenService.speeldagen.length
+    }
+
+    this.laadWedstrijden(this.huidigeSpeeldag)
   }
 
+
   ngOnInit() {
+    this.huidigeSpeeldag = this.#wedstrijdenService.huidigeSpeeldag
+    this.laadWedstrijden(this.huidigeSpeeldag)
   }
+  ionViewWillEnter(){
+    this.huidigeSpeeldag = this.#wedstrijdenService.huidigeSpeeldag
+    this.laadWedstrijden(this.huidigeSpeeldag)
+  }
+  ionViewDidLeave(){
+    this.isLoading = true
+    if (this.#WedstrijdSub) {
+      this.#WedstrijdSub.unsubscribe()
+    }
+  }
+
+  laadWedstrijden(speeldag: number): void {
+    // Unsubscribe van de vorige subscription indien deze bestaat
+    if (this.#WedstrijdSub) {
+      this.#WedstrijdSub.unsubscribe()
+    }
+
+    this.isLoading = true;
+    this.#WedstrijdSub = this.#apiFootballService.haalWedstrijdenOp(speeldag).subscribe({
+      next: (data) => {
+        this.wedstrijden = data
+        this.isLoading = false
+      },
+      error: (error) => {
+        console.error('Fout bij het laden van wedstrijden', error)
+        this.isLoading = false;
+      }
+    })
+  }
+
+
+
 
 }
